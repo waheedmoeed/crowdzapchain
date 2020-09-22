@@ -1,6 +1,6 @@
 package types
 
-// chainservice module event types
+// relcontractors module event types
 const (
 	// TODO: Create your event types
 	// EventType<Action>    		= "action"

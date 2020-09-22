@@ -8,13 +8,13 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	"github.com/waheedmoeed/relchain/x/chainservice/types"
+	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 )
 
 func registerQueryRoutes(cliCtx context.CLIContext, r *mux.Router) {
 	// TODO: Define your GET REST endpoints
 	r.HandleFunc(
-		"/chainservice/parameters",
+		"/relcontractors/parameters",
 		queryParamsHandlerFn(cliCtx),
 	).Methods("GET")
 }

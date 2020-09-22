@@ -6,10 +6,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/waheedmoeed/relchain/x/chainservice/types"
+	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 )
 
-// NewQuerier creates a new querier for chainservice clients.
+// NewQuerier creates a new querier for relcontractors clients.
 func NewQuerier(k Keeper) sdk.Querier {
 	return func(ctx sdk.Context, path []string, req abci.RequestQuery) ([]byte, error) {
 		switch path[0] {
@@ -17,7 +17,7 @@ func NewQuerier(k Keeper) sdk.Querier {
 			return queryParams(ctx, k)
 			// TODO: Put the modules query routes
 		default:
-			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "unknown chainservice query endpoint")
+			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "unknown relcontractors query endpoint")
 		}
 	}
 }

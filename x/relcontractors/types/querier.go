@@ -1,6 +1,6 @@
 package types
 
-// Query endpoints supported by the chainservice querier
+// Query endpoints supported by the relcontractors querier
 const (
 // TODO: Describe query parameters, update <action> with your query
 // Query<Action>    = "<action>"

@@ -18,12 +18,12 @@ var (
 // KeyParamName          = []byte("ParamName")
 )
 
-// ParamKeyTable for chainservice module
+// ParamKeyTable for relcontractors module
 func ParamKeyTable() params.KeyTable {
 	return params.NewKeyTable().RegisterParamSet(&Params{})
 }
 
-// Params - used for initializing default parameter for chainservice at genesis
+// Params - used for initializing default parameter for relcontractors at genesis
 type Params struct {
 	// TODO: Add your Paramaters to the Paramter struct
 	// KeyParamName string `json:"key_param_name"`

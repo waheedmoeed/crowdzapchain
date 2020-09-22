@@ -8,17 +8,17 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/waheedmoeed/relchain/x/chainservice/types"
+	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 )
 
-// Keeper of the chainservice store
+// Keeper of the relcontractors store
 type Keeper struct {
 	storeKey   sdk.StoreKey
 	cdc        *codec.Codec
 	paramspace types.ParamSubspace
 }
 
-// NewKeeper creates a chainservice keeper
+// NewKeeper creates a relcontractors keeper
 func NewKeeper(cdc *codec.Codec, key sdk.StoreKey, paramspace types.ParamSubspace) Keeper {
 	keeper := Keeper{
 		storeKey:   key,

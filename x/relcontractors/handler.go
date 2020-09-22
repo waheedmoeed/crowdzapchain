@@ -1,4 +1,4 @@
-package chainservice
+package relcontractors
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// NewHandler creates an sdk.Handler for all the chainservice type messages
+// NewHandler creates an sdk.Handler for all the relcontractors type messages
 func NewHandler(k Keeper) sdk.Handler {
 	return func(ctx sdk.Context, msg sdk.Msg) (*sdk.Result, error) {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())

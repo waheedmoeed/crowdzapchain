@@ -1,8 +1,8 @@
-package chainservice
+package relcontractors
 
 import (
-	"github.com/waheedmoeed/relchain/x/chainservice/keeper"
-	"github.com/waheedmoeed/relchain/x/chainservice/types"
+	"github.com/waheedmoeed/relchain/x/relcontractors/keeper"
+	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 )
 
 const (
@@ -25,7 +25,7 @@ var (
 	DefaultGenesisState = types.DefaultGenesisState
 	ValidateGenesis     = types.ValidateGenesis
 	// TODO: Fill out function aliases
-
+	NewRelContract = types.NewRelContract()
 	// variable aliases
 	ModuleCdc = types.ModuleCdc
 	// TODO: Fill out variable aliases
@@ -35,6 +35,6 @@ type (
 	Keeper       = keeper.Keeper
 	GenesisState = types.GenesisState
 	Params       = types.Params
-
+	RelContract  = types.RelContract
 	// TODO: Fill out module types
 )

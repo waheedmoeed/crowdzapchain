@@ -1,4 +1,4 @@
-package chainservice
+package relcontractors
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"

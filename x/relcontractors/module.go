@@ -1,4 +1,4 @@
-package chainservice
+package relcontractors
 
 import (
 	"encoding/json"
@@ -12,8 +12,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/waheedmoeed/relchain/x/chainservice/client/cli"
-	"github.com/waheedmoeed/relchain/x/chainservice/client/rest"
+	"github.com/waheedmoeed/relchain/x/relcontractors/client/cli"
+	"github.com/waheedmoeed/relchain/x/relcontractors/client/rest"
 )
 
 // Type check to ensure the interface is properly implemented
@@ -22,26 +22,26 @@ var (
 	_ module.AppModuleBasic = AppModuleBasic{}
 )
 
-// AppModuleBasic defines the basic application module used by the chainservice module.
+// AppModuleBasic defines the basic application module used by the relcontractors module.
 type AppModuleBasic struct{}
 
-// Name returns the chainservice module's name.
+// Name returns the relcontractors module's name.
 func (AppModuleBasic) Name() string {
 	return ModuleName
 }
 
-// RegisterCodec registers the chainservice module's types for the given codec.
+// RegisterCodec registers the relcontractors module's types for the given codec.
 func (AppModuleBasic) RegisterCodec(cdc *codec.Codec) {
 	RegisterCodec(cdc)
 }
 
-// DefaultGenesis returns default genesis state as raw bytes for the chainservice
+// DefaultGenesis returns default genesis state as raw bytes for the relcontractors
 // module.
 func (AppModuleBasic) DefaultGenesis() json.RawMessage {
 	return ModuleCdc.MustMarshalJSON(DefaultGenesisState())
 }
 
-// ValidateGenesis performs genesis state validation for the chainservice module.
+// ValidateGenesis performs genesis state validation for the relcontractors module.
 func (AppModuleBasic) ValidateGenesis(bz json.RawMessage) error {
 	var data GenesisState
 	err := ModuleCdc.UnmarshalJSON(bz, &data)
@@ -51,24 +51,24 @@ func (AppModuleBasic) ValidateGenesis(bz json.RawMessage) error {
 	return ValidateGenesis(data)
 }
 
-// RegisterRESTRoutes registers the REST routes for the chainservice module.
+// RegisterRESTRoutes registers the REST routes for the relcontractors module.
 func (AppModuleBasic) RegisterRESTRoutes(ctx context.CLIContext, rtr *mux.Router) {
 	rest.RegisterRoutes(ctx, rtr)
 }
 
-// GetTxCmd returns the root tx command for the chainservice module.
+// GetTxCmd returns the root tx command for the relcontractors module.
 func (AppModuleBasic) GetTxCmd(cdc *codec.Codec) *cobra.Command {
 	return cli.GetTxCmd(cdc)
 }
 
-// GetQueryCmd returns no root query command for the chainservice module.
+// GetQueryCmd returns no root query command for the relcontractors module.
 func (AppModuleBasic) GetQueryCmd(cdc *codec.Codec) *cobra.Command {
 	return cli.GetQueryCmd(StoreKey, cdc)
 }
 
 //____________________________________________________________________________
 
-// AppModule implements an application module for the chainservice module.
+// AppModule implements an application module for the relcontractors module.
 type AppModule struct {
 	AppModuleBasic
 
@@ -85,35 +85,35 @@ func NewAppModule(k Keeper /*TODO: Add Keepers that your application depends on*
 	}
 }
 
-// Name returns the chainservice module's name.
+// Name returns the relcontractors module's name.
 func (AppModule) Name() string {
 	return ModuleName
 }
 
-// RegisterInvariants registers the chainservice module invariants.
+// RegisterInvariants registers the relcontractors module invariants.
 func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 
-// Route returns the message routing key for the chainservice module.
+// Route returns the message routing key for the relcontractors module.
 func (AppModule) Route() string {
 	return RouterKey
 }
 
-// NewHandler returns an sdk.Handler for the chainservice module.
+// NewHandler returns an sdk.Handler for the relcontractors module.
 func (am AppModule) NewHandler() sdk.Handler {
 	return NewHandler(am.keeper)
 }
 
-// QuerierRoute returns the chainservice module's querier route name.
+// QuerierRoute returns the relcontractors module's querier route name.
 func (AppModule) QuerierRoute() string {
 	return QuerierRoute
 }
 
-// NewQuerierHandler returns the chainservice module sdk.Querier.
+// NewQuerierHandler returns the relcontractors module sdk.Querier.
 func (am AppModule) NewQuerierHandler() sdk.Querier {
 	return NewQuerier(am.keeper)
 }
 
-// InitGenesis performs genesis initialization for the chainservice module. It returns
+// InitGenesis performs genesis initialization for the relcontractors module. It returns
 // no validator updates.
 func (am AppModule) InitGenesis(ctx sdk.Context, data json.RawMessage) []abci.ValidatorUpdate {
 	var genesisState GenesisState
@@ -122,19 +122,19 @@ func (am AppModule) InitGenesis(ctx sdk.Context, data json.RawMessage) []abci.Va
 	return []abci.ValidatorUpdate{}
 }
 
-// ExportGenesis returns the exported genesis state as raw bytes for the chainservice
+// ExportGenesis returns the exported genesis state as raw bytes for the relcontractors
 // module.
 func (am AppModule) ExportGenesis(ctx sdk.Context) json.RawMessage {
 	gs := ExportGenesis(ctx, am.keeper)
 	return ModuleCdc.MustMarshalJSON(gs)
 }
 
-// BeginBlock returns the begin blocker for the chainservice module.
+// BeginBlock returns the begin blocker for the relcontractors module.
 func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
 	BeginBlocker(ctx, req, am.keeper)
 }
 
-// EndBlock returns the end blocker for the chainservice module. It returns no validator
+// EndBlock returns the end blocker for the relcontractors module. It returns no validator
 // updates.
 func (AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
