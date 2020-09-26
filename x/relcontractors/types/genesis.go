@@ -12,17 +12,8 @@ type GenesisState struct {
 }
 
 // NewGenesisState creates a new GenesisState object
-func NewGenesisState(mintedCoins int, distributedCoins int, relContractors []Contractor) GenesisState {
-	return GenesisState{
-		RelContract: RelContract{
-			MintedCoins:          sdk.Coins{sdk.NewInt64Coin("rel", int64(mintedCoins))},
-			MintedCoinsRecord:    nil,
-			DistributedCoins:     sdk.Coins{sdk.NewInt64Coin("rel", int64(distributedCoins))},
-			DistributedCoinsLogs: nil, //todo: add logs/records of initial distribution, if needed.
-			RelContractors:       relContractors,
-			VotingPolls:          nil,
-		},
-	}
+func NewGenesisState() GenesisState {
+	return GenesisState{}
 }
 
 // DefaultGenesisState - default GenesisState used by Cosmos Hub
@@ -35,7 +26,20 @@ func DefaultGenesisState() GenesisState {
 			OtherAddresses:    nil,
 		}
 	}
-	return NewGenesisState(10000, 2000, contractors)
+	return createDefaultState(10000, 2000, contractors)
+}
+
+func createDefaultState(mintedCoins int, distributedCoins int, relContractors []Contractor) GenesisState {
+	return GenesisState{
+		RelContract: RelContract{
+			MintedCoins:          sdk.Coins{sdk.NewInt64Coin("rel", int64(mintedCoins))},
+			MintedCoinsRecord:    nil,
+			DistributedCoins:     sdk.Coins{sdk.NewInt64Coin("rel", int64(distributedCoins))},
+			DistributedCoinsLogs: nil, //todo: add logs/records of initial distribution, if needed.
+			RelContractors:       relContractors,
+			VotingPolls:          nil,
+		},
+	}
 }
 
 func getNewAccount() (address sdk.AccAddress) {

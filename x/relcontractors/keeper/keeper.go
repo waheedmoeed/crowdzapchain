@@ -28,6 +28,14 @@ func NewKeeper(cdc *codec.Codec, key sdk.StoreKey, paramspace types.ParamSubspac
 	return keeper
 }
 
+// store/create smart contract in DB >>> Used at the time Genesis Process
+func (k Keeper)InitContract(ctx sdk.Context, relContract types.RelContract){
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(relContract)
+	contractKey := []byte("cosmos1h4sf6s3xvkh04wahfg8ncm7yh9p22ds7rpyyrc")
+	store.Set(contractKey, bz)
+}
+
 // Logger returns a module-specific logger.
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
