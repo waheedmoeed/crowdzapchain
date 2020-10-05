@@ -13,6 +13,10 @@ func NewHandler(k Keeper) sdk.Handler {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
 		switch msg := msg.(type) {
 		// TODO: Define your msg cases
+		case MsgUpdateRelContractorAddress:
+			return handleMsgUpdateReContractorAddress(ctx, k, msg)
+		case MsgCreatePoll:
+			return handleMsgCreatePoll(ctx, k, msg)
 		//
 		//Example:
 		// case Msg<Action>:
@@ -22,6 +26,18 @@ func NewHandler(k Keeper) sdk.Handler {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
 		}
 	}
+}
+
+func handleMsgUpdateReContractorAddress(ctx sdk.Context, k Keeper, msg MsgUpdateRelContractorAddress) (*sdk.Result, error) {
+	//Todo define logic to update contract and store it in db
+
+	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
+}
+
+func handleMsgCreatePoll(ctx sdk.Context, k Keeper, msg MsgCreatePoll) (*sdk.Result, error) {
+	//Todo define logic to update contract and store it in db
+
+	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
 
 // handle<Action> does x

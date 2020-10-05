@@ -51,13 +51,13 @@ func getNewAccount() (address sdk.AccAddress) {
 
 // ValidateGenesis validates the relcontractors genesis parameters
 func ValidateGenesis(data GenesisState) error {
-	if data.RelContract.MintedCoins.AmountOf("rel").Int64() > int64(100) {
+	if data.RelContract.MintedCoins.AmountOf("rel").Int64() < int64(100) {
 		return fmt.Errorf("invalid MintedCoins: Value: %s. Error: Must be greater than 100", data.RelContract.MintedCoins.String())
 	}
-	if data.RelContract.DistributedCoins.AmountOf("rel").Int64() < data.RelContract.MintedCoins.AmountOf("rel").Int64() {
+	if data.RelContract.DistributedCoins.AmountOf("rel").Int64() > data.RelContract.MintedCoins.AmountOf("rel").Int64() {
 		return fmt.Errorf("invalid DistributedCoins: Value: %s. Error: Must be less than MintedCoins", data.RelContract.DistributedCoins.String())
 	}
-	if len(data.RelContract.RelContractors) > 3 {
+	if len(data.RelContract.RelContractors) < 3 {
 		return fmt.Errorf("invalid RelContractors:. Error:Number of RelContractors must be greater than 3")
 	}
 	if error := checkDistributionAddress(data); error != nil {
@@ -76,12 +76,15 @@ func ValidateGenesis(data GenesisState) error {
 func checkDistributionAddress(data GenesisState) error {
 	if data.RelContract.DistributedCoinsLogs != nil {
 		for _, value := range data.RelContract.DistributedCoinsLogs {
+			founded := false
 			for _, contractor := range data.RelContract.RelContractors {
 				if value.ContractorAddress.Equals(contractor.ContractorAddress) {
+					founded = true
 					break
-				} else {
-					return fmt.Errorf("invalid DistributedCoinsLogs:. Error:DistributedLogs must be a valid RelContractor")
 				}
+			}
+			if founded == false {
+				return fmt.Errorf("% :mismatch must be in both relcontractor and distributed record", value)
 			}
 		}
 	}

@@ -2,6 +2,8 @@ package relcontractors
 
 import (
 	"encoding/json"
+	"github.com/cosmos/cosmos-sdk/x/auth"
+	"github.com/cosmos/cosmos-sdk/x/bank"
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
@@ -53,7 +55,7 @@ func (AppModuleBasic) ValidateGenesis(bz json.RawMessage) error {
 
 // RegisterRESTRoutes registers the REST routes for the relcontractors module.
 func (AppModuleBasic) RegisterRESTRoutes(ctx context.CLIContext, rtr *mux.Router) {
-	rest.RegisterRoutes(ctx, rtr)
+	rest.RegisterRoutes(ctx, rtr, "relcontractors")
 }
 
 // GetTxCmd returns the root tx command for the relcontractors module.
@@ -71,16 +73,19 @@ func (AppModuleBasic) GetQueryCmd(cdc *codec.Codec) *cobra.Command {
 // AppModule implements an application module for the relcontractors module.
 type AppModule struct {
 	AppModuleBasic
-
-	keeper Keeper
+	keeper     Keeper
+	AuthKeeper auth.AccountKeeper
+	BankKeeper bank.Keeper
 	// TODO: Add keepers that your application depends on
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(k Keeper /*TODO: Add Keepers that your application depends on*/) AppModule {
+func NewAppModule(k Keeper, authK auth.AccountKeeper, bankK bank.Keeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
+		AuthKeeper:     authK,
+		BankKeeper:     bankK,
 		// TODO: Add keepers that your application depends on
 	}
 }
@@ -118,7 +123,7 @@ func (am AppModule) NewQuerierHandler() sdk.Querier {
 func (am AppModule) InitGenesis(ctx sdk.Context, data json.RawMessage) []abci.ValidatorUpdate {
 	var genesisState GenesisState
 	ModuleCdc.MustUnmarshalJSON(data, &genesisState)
-	InitGenesis(ctx, am.keeper, genesisState)
+	InitGenesis(ctx, am.keeper, am.AuthKeeper, genesisState)
 	return []abci.ValidatorUpdate{}
 }
 

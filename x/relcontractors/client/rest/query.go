@@ -2,31 +2,23 @@ package rest
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/gorilla/mux"
+	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 )
 
-func registerQueryRoutes(cliCtx context.CLIContext, r *mux.Router) {
-	// TODO: Define your GET REST endpoints
-	r.HandleFunc(
-		"/relcontractors/parameters",
-		queryParamsHandlerFn(cliCtx),
-	).Methods("GET")
-}
-
-func queryParamsHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
+func queryRelContractor(cliCtx context.CLIContext, moduleName string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
 		if !ok {
 			return
 		}
+		vars := mux.Vars(r)
+		paramAddress := vars[restContractor]
 
-		route := fmt.Sprintf("custom/%s/parameters", types.QuerierRoute)
+		route := fmt.Sprintf("custom/%s/relContractor/%s", moduleName, paramAddress)
 
 		res, height, err := cliCtx.QueryWithData(route, nil)
 		if err != nil {

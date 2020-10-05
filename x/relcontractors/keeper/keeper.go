@@ -3,13 +3,14 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 )
+
+var contractKey = []byte("cosmos1h4sf6s3xvkh04wahfg8ncm7yh9p22ds7rpyyrc")
 
 // Keeper of the relcontractors store
 type Keeper struct {
@@ -19,20 +20,18 @@ type Keeper struct {
 }
 
 // NewKeeper creates a relcontractors keeper
-func NewKeeper(cdc *codec.Codec, key sdk.StoreKey, paramspace types.ParamSubspace) Keeper {
+func NewKeeper(cdc *codec.Codec, key sdk.StoreKey) Keeper {
 	keeper := Keeper{
-		storeKey:   key,
-		cdc:        cdc,
-		paramspace: paramspace.WithKeyTable(types.ParamKeyTable()),
+		storeKey: key,
+		cdc:      cdc,
 	}
 	return keeper
 }
 
 // store/create smart contract in DB >>> Used at the time Genesis Process
-func (k Keeper)InitContract(ctx sdk.Context, relContract types.RelContract){
+func (k Keeper) InitContract(ctx sdk.Context, relContract types.RelContract) {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshalBinaryLengthPrefixed(relContract)
-	contractKey := []byte("cosmos1h4sf6s3xvkh04wahfg8ncm7yh9p22ds7rpyyrc")
 	store.Set(contractKey, bz)
 }
 
@@ -42,24 +41,18 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // Get returns the pubkey from the adddress-pubkey relation
-func (k Keeper) Get(ctx sdk.Context, key string) (/* TODO: Fill out this type */, error) {
+func (k Keeper) Get(ctx sdk.Context) (types.RelContract, error) {
 	store := ctx.KVStore(k.storeKey)
-	var item /* TODO: Fill out this type */
-	byteKey := []byte(key)
-	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(byteKey), &item)
+	var contract types.RelContract
+	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(contractKey), &contract)
 	if err != nil {
-		return nil, err
+		return types.RelContract{}, err
 	}
-	return item, nil
+	return contract, nil
 }
 
-func (k Keeper) set(ctx sdk.Context, key string, value /* TODO: fill out this type */ ) {
+func (k Keeper) Set(ctx sdk.Context, contract types.RelContract) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshalBinaryLengthPrefixed(value)
-	store.Set([]byte(key), bz)
-}
-
-func (k Keeper) delete(ctx sdk.Context, key string) {
-	store := ctx.KVStore(k.storeKey)
-	store.Delete([]byte(key))
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(contract)
+	store.Set(contractKey, bz)
 }

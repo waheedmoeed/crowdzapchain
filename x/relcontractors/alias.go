@@ -32,9 +32,11 @@ var (
 )
 
 type (
-	Keeper       = keeper.Keeper
-	GenesisState = types.GenesisState
-	Params       = types.Params
-	RelContract  = types.RelContract
+	Keeper                        = keeper.Keeper
+	GenesisState                  = types.GenesisState
+	Params                        = types.Params
+	RelContract                   = types.RelContract
+	MsgUpdateRelContractorAddress = types.MsgUpdateRelContractorAddress
+	MsgCreatePoll                 = types.MsgCreatePoll
 	// TODO: Fill out module types
 )

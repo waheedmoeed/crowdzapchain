@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"github.com/waheedmoeed/relchain/x/relcontractors"
 	"io"
 	"os"
 
@@ -52,6 +53,7 @@ var (
 		params.AppModuleBasic{},
 		slashing.AppModuleBasic{},
 		supply.AppModuleBasic{},
+		relcontractors.AppModule{},
 		// TODO: Add your module(s) AppModuleBasic
 	)
 
@@ -92,13 +94,14 @@ type NewApp struct {
 	subspaces map[string]params.Subspace
 
 	// keepers
-	accountKeeper  auth.AccountKeeper
-	bankKeeper     bank.Keeper
-	stakingKeeper  staking.Keeper
-	slashingKeeper slashing.Keeper
-	distrKeeper    distr.Keeper
-	supplyKeeper   supply.Keeper
-	paramsKeeper   params.Keeper
+	accountKeeper        auth.AccountKeeper
+	bankKeeper           bank.Keeper
+	stakingKeeper        staking.Keeper
+	slashingKeeper       slashing.Keeper
+	distrKeeper          distr.Keeper
+	supplyKeeper         supply.Keeper
+	paramsKeeper         params.Keeper
+	relContractorsKeeper relcontractors.Keeper
 	// TODO: Add your module(s)
 
 	// Module Manager
@@ -126,7 +129,7 @@ func NewInitApp(
 
 	// TODO: Add the keys that module requires
 	keys := sdk.NewKVStoreKeys(bam.MainStoreKey, auth.StoreKey, staking.StoreKey,
-		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey)
+		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey, relcontractors.StoreKey)
 
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
 
@@ -206,6 +209,10 @@ func NewInitApp(
 			app.slashingKeeper.Hooks()),
 	)
 
+	app.relContractorsKeeper = relcontractors.NewKeeper(
+		app.cdc,
+		keys[relcontractors.StoreKey],
+	)
 	// TODO: Add your module(s) keepers
 
 	// NOTE: Any module instantiated in the module manager that is later modified
@@ -218,6 +225,7 @@ func NewInitApp(
 		distr.NewAppModule(app.distrKeeper, app.accountKeeper, app.supplyKeeper, app.stakingKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 		// TODO: Add your module(s)
+		relcontractors.NewAppModule(app.relContractorsKeeper, app.accountKeeper, app.bankKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 	)
@@ -240,6 +248,7 @@ func NewInitApp(
 		// TODO: Add your module(s)
 		supply.ModuleName,
 		genutil.ModuleName,
+		relcontractors.ModuleName,
 	)
 
 	// register all module routes and module queriers
