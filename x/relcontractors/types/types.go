@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -13,10 +14,10 @@ import (
 // Whois is a struct that contains all the metadata of a name
 type RelContract struct {
 	//to keep track of total coins and distributed coins among contractors.
-	MintedCoins       sdk.Coins           `json:"minted_coins"`
+	MintedCoins       sdk.Coin            `json:"minted_coins"`
 	MintedCoinsRecord []CoinsMintedRecord `json:"minted_coins_record"`
 
-	DistributedCoins     sdk.Coins                `json:distributed_coins`
+	DistributedCoins     sdk.Coin                 `json:distributed_coins`
 	DistributedCoinsLogs []DistributedCoinsRecord `json:"rel_contractors_coins"`
 
 	RelContractors []Contractor `json:"rel_contractors"`
@@ -32,22 +33,23 @@ type Contractor struct {
 
 type DistributedCoinsRecord struct {
 	ContractorAddress      sdk.AccAddress `json:contractor_address`
-	Coins                  sdk.Coins      `json:"coins"`
-	IssuedDate             uint           `json:"issued_date"`
-	DistributedCoinsAmount sdk.Coins      `json:"distributed_coins_amount"` //amount of distributed coins at the time of distribution
+	Coins                  sdk.Coin       `json:"coins"`
+	IssuedDate             time.Time      `json:"issued_date"`
+	DistributedCoinsAmount sdk.Coin       `json:"distributed_coins_amount"` //amount of distributed coins at the time of distribution
 }
 
 //Keeps track of coins minted and positive votes to that minted coins
 type CoinsMintedRecord struct {
-	Coins           sdk.Coins        `json:"coins"`
-	Date            uint             `json:"date"`
+	Coins           sdk.Coin         `json:"coins"`
+	Date            time.Time        `json:"date"`
 	VoterContractor []sdk.AccAddress `json:contractor_addresses`
 }
 
 type VotingPoll struct {
+	PollId               string           `json:"poll_id"`
 	PollType             uint             `json:"type"`
-	StartTime            uint             `json:"start_time"`
-	EndTime              uint             `json:"end_time"`
+	StartTime            time.Time        `json:"start_time"`
+	EndTime              time.Time        `json:"end_time"`
 	PositiveVotes        uint             `json:"positive_votes"`
 	NegativeVotes        uint             `json:"negative_votes"`
 	PositiveVotesAddress []sdk.AccAddress `json:"positive_votes_address"`

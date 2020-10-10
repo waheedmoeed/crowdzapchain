@@ -1,13 +1,15 @@
 package types
 
 import (
+	"errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkErrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"time"
 )
 
 type MsgUpdateRelContractorAddress struct {
-	RelContractorAddress    sdk.AccAddress
-	NewRelContractorAddress sdk.AccAddress
+	RelContractorAddress    sdk.AccAddress `json:"rel_contractor_address"`
+	NewRelContractorAddress sdk.AccAddress `json:"new_rel_contractor_address"`
 }
 
 func NewMsgUpdateRelContractorAddress(relContractorAdd sdk.AccAddress, newRelContractAdd sdk.AccAddress) MsgUpdateRelContractorAddress {
@@ -31,7 +33,7 @@ func (msg MsgUpdateRelContractorAddress) GetSignBytes() []byte {
 
 // ValidateBasic validity check for the AnteHandler
 func (msg MsgUpdateRelContractorAddress) ValidateBasic() error {
-	if msg.RelContractorAddress.Empty() {
+	if msg.RelContractorAddress.Empty() || msg.NewRelContractorAddress.Empty() {
 		return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Missing now RelContractor Address")
 	}
 	return nil
@@ -39,8 +41,8 @@ func (msg MsgUpdateRelContractorAddress) ValidateBasic() error {
 
 type MsgCreatePoll struct {
 	PollType       uint           `json:"type"`
-	StartTime      uint           `json:"start_time"`
-	EndTime        uint           `json:"end_time"`
+	StartTime      time.Time      `json:"start_time"`
+	EndTime        time.Time      `json:"end_time"`
 	OwnerVoterPoll sdk.AccAddress `json:"owner_voter_poll"`
 }
 
@@ -50,7 +52,7 @@ const (
 	BLACKLIST_CONTRACTOR = 3
 )
 
-func NewMsgCreatePoll(pollType uint, startTime uint, endTime uint, ownerVoterPoll sdk.AccAddress) MsgCreatePoll {
+func NewMsgCreatePoll(pollType uint, startTime time.Time, endTime time.Time, ownerVoterPoll sdk.AccAddress) MsgCreatePoll {
 	return MsgCreatePoll{
 		PollType:       pollType,
 		StartTime:      startTime,
@@ -73,11 +75,14 @@ func (msg MsgCreatePoll) GetSignBytes() []byte {
 //TODO: do data validation
 // ValidateBasic validity check for the AnteHandler
 func (msg MsgCreatePoll) ValidateBasic() error {
-	if msg.OwnerVoterPoll.Empty() {
+	if msg.GetSigners()[0].Equals(msg.OwnerVoterPoll) {
 		return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Mismatch RelContractor Address and signer")
 	}
 	if !(msg.PollType > 0 && msg.PollType < 4) {
 		return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Invalid type of pool")
+	}
+	if msg.EndTime.Sub(msg.StartTime).Hours() < 24 {
+		return sdkErrors.Wrap(errors.New("Time Duration for poll must be greater than 24 hours"), "")
 	}
 	return nil
 }

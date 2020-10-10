@@ -32,9 +32,9 @@ func DefaultGenesisState() GenesisState {
 func createDefaultState(mintedCoins int, distributedCoins int, relContractors []Contractor) GenesisState {
 	return GenesisState{
 		RelContract: RelContract{
-			MintedCoins:          sdk.Coins{sdk.NewInt64Coin("rel", int64(mintedCoins))},
+			MintedCoins:          sdk.Coin{"rel", sdk.NewInt(int64(mintedCoins))},
 			MintedCoinsRecord:    nil,
-			DistributedCoins:     sdk.Coins{sdk.NewInt64Coin("rel", int64(distributedCoins))},
+			DistributedCoins:     sdk.Coin{"rel", sdk.NewInt(int64(distributedCoins))},
 			DistributedCoinsLogs: nil, //todo: add logs/records of initial distribution, if needed.
 			RelContractors:       relContractors,
 			VotingPolls:          nil,
@@ -51,10 +51,10 @@ func getNewAccount() (address sdk.AccAddress) {
 
 // ValidateGenesis validates the relcontractors genesis parameters
 func ValidateGenesis(data GenesisState) error {
-	if data.RelContract.MintedCoins.AmountOf("rel").Int64() < int64(100) {
+	if data.RelContract.MintedCoins.Amount.Int64() < int64(100) {
 		return fmt.Errorf("invalid MintedCoins: Value: %s. Error: Must be greater than 100", data.RelContract.MintedCoins.String())
 	}
-	if data.RelContract.DistributedCoins.AmountOf("rel").Int64() > data.RelContract.MintedCoins.AmountOf("rel").Int64() {
+	if data.RelContract.DistributedCoins.Amount.Int64() > data.RelContract.MintedCoins.Amount.Int64() {
 		return fmt.Errorf("invalid DistributedCoins: Value: %s. Error: Must be less than MintedCoins", data.RelContract.DistributedCoins.String())
 	}
 	if len(data.RelContract.RelContractors) < 3 {

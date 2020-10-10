@@ -10,6 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 	"net/http"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/client/context"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
@@ -18,7 +19,7 @@ import (
 	// "github.com/waheedmoeed/relchain/x/relcontractors/types"
 )
 
-type updateRelContractorAddressReq struct {
+type UpdateRelContractorAddressReq struct {
 	BaseReq                 rest.BaseReq `json:"base_req"`
 	RelContractorAddress    string       `json:"rel_contractor_address"`
 	NewRelContractorAddress string       `json:"new_rel_contractor_address"`
@@ -26,7 +27,7 @@ type updateRelContractorAddressReq struct {
 
 func updateRelContractorAddressHandler(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req updateRelContractorAddressReq
+		var req UpdateRelContractorAddressReq
 
 		if !rest.ReadRESTReq(w, r, cliCtx.Codec, &req) {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, "failed to parse request")
@@ -54,6 +55,42 @@ func updateRelContractorAddressHandler(cliCtx context.CLIContext) http.HandlerFu
 		// create the message
 		msg := types.NewMsgUpdateRelContractorAddress(oldAddr, newAddr)
 		err = msg.ValidateBasic()
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		utils.WriteGenerateStdTxResponse(w, cliCtx, baseReq, []sdk.Msg{msg})
+
+	}
+}
+
+type CreateVotingPollReq struct {
+	BaseReq        rest.BaseReq   `json:"base_req"`
+	PollType       uint           `json:"type"`
+	StartTime      time.Time      `json:"start_time"`
+	EndTime        time.Time      `json:"end_time"`
+	OwnerVoterPoll sdk.AccAddress `json:"owner_voter_poll"`
+}
+
+func createVotingPollHandler(cliCtx context.CLIContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req CreateVotingPollReq
+
+		if !rest.ReadRESTReq(w, r, cliCtx.Codec, &req) {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, "failed to parse request")
+			return
+		}
+
+		baseReq := req.BaseReq.Sanitize()
+		if !baseReq.ValidateBasic(w) {
+			return
+		}
+
+		// TODO: Define the module tx logic for this action
+		// create the message
+		msg := types.NewMsgCreatePoll(req.PollType, req.StartTime, req.EndTime, req.OwnerVoterPoll)
+		err := msg.ValidateBasic()
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return

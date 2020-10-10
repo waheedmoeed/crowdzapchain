@@ -56,3 +56,21 @@ func (k Keeper) Set(ctx sdk.Context, contract types.RelContract) {
 	bz := k.cdc.MustMarshalBinaryLengthPrefixed(contract)
 	store.Set(contractKey, bz)
 }
+
+//Get contractor from store by matching addresses
+func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) (types.Contractor, error) {
+	store := ctx.KVStore(k.storeKey)
+	var contract types.RelContract
+	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(contractKey), &contract)
+	if err != nil {
+		return types.Contractor{}, err
+	}
+	contractor := types.Contractor{}
+	for _, value := range contract.RelContractors {
+		if value.ContractorAddress.Equals(address) {
+			contractor = value
+			break
+		}
+	}
+	return contractor, nil
+}

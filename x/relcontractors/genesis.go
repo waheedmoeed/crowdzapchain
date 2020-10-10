@@ -15,9 +15,9 @@ func InitGenesis(ctx sdk.Context, k Keeper, authKeeper auth.AccountKeeper, data 
 }
 
 //validate that coins distributed to RelContractors are same defined in RelDistributionLogs
-func validateRelDistribution(data GenesisState, authkeeper auth.AccountKeeper, ctx sdk.Context) bool {
+func validateRelDistribution(data GenesisState, authKeeper auth.AccountKeeper, ctx sdk.Context) bool {
 	for _, value := range data.RelContract.DistributedCoinsLogs {
-		if authkeeper.GetAccount(ctx, value.ContractorAddress).GetCoins().AmountOf("rel").Int64() != value.Coins.AmountOf("rel").Int64() {
+		if authKeeper.GetAccount(ctx, value.ContractorAddress).GetCoins().AmountOf("rel").Int64() != value.Coins.Amount.Int64() {
 			panic("Amount of coins must be equal in both account and log at \"validateRelDistribution\" for address: " + value.ContractorAddress.String())
 		}
 	}
@@ -29,5 +29,11 @@ func validateRelDistribution(data GenesisState, authkeeper auth.AccountKeeper, c
 // with InitGenesis
 func ExportGenesis(ctx sdk.Context, k Keeper) (data GenesisState) {
 	// TODO: Define logic for exporting state
-	return NewGenesisState()
+	state, err := k.Get(ctx)
+	if err != nil {
+		panic("Failed to export genesis state in rel contractor state")
+	}
+	genesisState := NewGenesisState()
+	genesisState.RelContract = state
+	return genesisState
 }

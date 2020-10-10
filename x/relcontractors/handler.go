@@ -28,18 +28,6 @@ func NewHandler(k Keeper) sdk.Handler {
 	}
 }
 
-func handleMsgUpdateReContractorAddress(ctx sdk.Context, k Keeper, msg MsgUpdateRelContractorAddress) (*sdk.Result, error) {
-	//Todo define logic to update contract and store it in db
-
-	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
-}
-
-func handleMsgCreatePoll(ctx sdk.Context, k Keeper, msg MsgCreatePoll) (*sdk.Result, error) {
-	//Todo define logic to update contract and store it in db
-
-	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
-}
-
 // handle<Action> does x
 /*func handleMsg<Action>(ctx sdk.Context, k Keeper, msg Msg<Action>) (*sdk.Result, error) {
 	err := k.<Action>(ctx, msg.ValidatorAddr)

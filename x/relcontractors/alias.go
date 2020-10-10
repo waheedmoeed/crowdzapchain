@@ -36,6 +36,7 @@ type (
 	GenesisState                  = types.GenesisState
 	Params                        = types.Params
 	RelContract                   = types.RelContract
+	VotingPoll                    = types.VotingPoll
 	MsgUpdateRelContractorAddress = types.MsgUpdateRelContractorAddress
 	MsgCreatePoll                 = types.MsgCreatePoll
 	// TODO: Fill out module types
