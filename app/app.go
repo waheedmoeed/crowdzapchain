@@ -212,6 +212,8 @@ func NewInitApp(
 	app.relContractorsKeeper = relcontractors.NewKeeper(
 		app.cdc,
 		keys[relcontractors.StoreKey],
+		app.accountKeeper,
+		app.bankKeeper,
 	)
 	// TODO: Add your module(s) keepers
 

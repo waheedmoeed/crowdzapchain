@@ -7,11 +7,6 @@ import (
 	"time"
 )
 
-type MsgUpdateRelContractorAddress struct {
-	RelContractorAddress    sdk.AccAddress `json:"rel_contractor_address"`
-	NewRelContractorAddress sdk.AccAddress `json:"new_rel_contractor_address"`
-}
-
 func NewMsgUpdateRelContractorAddress(relContractorAdd sdk.AccAddress, newRelContractAdd sdk.AccAddress) MsgUpdateRelContractorAddress {
 	return MsgUpdateRelContractorAddress{
 		RelContractorAddress:    relContractorAdd,
@@ -22,7 +17,7 @@ func NewMsgUpdateRelContractorAddress(relContractorAdd sdk.AccAddress, newRelCon
 func (msg MsgUpdateRelContractorAddress) Route() string { return RouterKey }
 func (msg MsgUpdateRelContractorAddress) Type() string  { return "update_relcontractor_address" }
 func (msg MsgUpdateRelContractorAddress) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{sdk.AccAddress(msg.RelContractorAddress)}
+	return []sdk.AccAddress{msg.RelContractorAddress}
 }
 
 // GetSignBytes gets the bytes for the message signer to sign on
@@ -39,29 +34,23 @@ func (msg MsgUpdateRelContractorAddress) ValidateBasic() error {
 	return nil
 }
 
-type MsgCreatePoll struct {
-	PollType       uint           `json:"type"`
-	StartTime      time.Time      `json:"start_time"`
-	EndTime        time.Time      `json:"end_time"`
-	OwnerVoterPoll sdk.AccAddress `json:"owner_voter_poll"`
-}
+/*
 
-const (
-	MINT_COINS           = 1
-	DISTRIBUTE_COINS     = 2
-	BLACKLIST_CONTRACTOR = 3
-)
 
-func NewMsgCreatePoll(pollType uint, startTime time.Time, endTime time.Time, ownerVoterPoll sdk.AccAddress) MsgCreatePoll {
+
+ */
+
+func NewMsgCreatePoll(pollType uint, startTime time.Time, endTime time.Time, ownerVoterPoll sdk.AccAddress, coinsAmount sdk.Coin) MsgCreatePoll {
 	return MsgCreatePoll{
 		PollType:       pollType,
 		StartTime:      startTime,
 		EndTime:        endTime,
 		OwnerVoterPoll: ownerVoterPoll,
+		CoinsAmount:    coinsAmount,
 	}
 }
 func (msg MsgCreatePoll) Route() string { return RouterKey }
-func (msg MsgCreatePoll) Type() string  { return "update_relcontractor_address" }
+func (msg MsgCreatePoll) Type() string  { return "create_poll" }
 func (msg MsgCreatePoll) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sdk.AccAddress(msg.OwnerVoterPoll)}
 }
@@ -72,12 +61,8 @@ func (msg MsgCreatePoll) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-//TODO: do data validation
 // ValidateBasic validity check for the AnteHandler
 func (msg MsgCreatePoll) ValidateBasic() error {
-	if msg.GetSigners()[0].Equals(msg.OwnerVoterPoll) {
-		return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Mismatch RelContractor Address and signer")
-	}
 	if !(msg.PollType > 0 && msg.PollType < 4) {
 		return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Invalid type of pool")
 	}
@@ -87,7 +72,67 @@ func (msg MsgCreatePoll) ValidateBasic() error {
 	return nil
 }
 
-// TODO: Describe your actions, these will implment the interface of `sdk.Msg`
+/*
+
+
+
+ */
+func NewMsgVotePoll(pollId string, vote uint, voter sdk.AccAddress) MsgVotePoll {
+	return MsgVotePoll{
+		PollId: pollId,
+		Vote:   vote,
+		Voter:  voter,
+	}
+}
+func (msg MsgVotePoll) Route() string { return RouterKey }
+func (msg MsgVotePoll) Type() string  { return "vote_poll" }
+func (msg MsgVotePoll) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{msg.Voter}
+}
+
+// GetSignBytes gets the bytes for the message signer to sign on
+func (msg MsgVotePoll) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic validity check for the AnteHandler
+func (msg MsgVotePoll) ValidateBasic() error {
+	//Vote must be either 0 or 1
+	if msg.Vote == 0 || msg.Vote == 1 {
+		return nil
+	}
+	return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Invalid vote")
+}
+
+/*
+
+
+
+ */
+func NewProcessPoll(pollId string, transactor sdk.AccAddress) MsgProcessPoll {
+	return MsgProcessPoll{
+		PollId:     pollId,
+		Transactor: transactor,
+	}
+}
+func (msg MsgProcessPoll) Route() string { return RouterKey }
+func (msg MsgProcessPoll) Type() string  { return "process_poll" }
+func (msg MsgProcessPoll) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{msg.Transactor}
+}
+
+// GetSignBytes gets the bytes for the message signer to sign on
+func (msg MsgProcessPoll) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic validity check for the AnteHandler
+func (msg MsgProcessPoll) ValidateBasic() error {
+	return nil
+}
+
 /*
 // verify interface at compile time
 var _ sdk.Msg = &Msg<Action>{}

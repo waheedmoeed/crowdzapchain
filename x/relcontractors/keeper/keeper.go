@@ -1,8 +1,9 @@
 package keeper
 
 import (
+	"errors"
 	"fmt"
-
+	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -17,13 +18,17 @@ type Keeper struct {
 	storeKey   sdk.StoreKey
 	cdc        *codec.Codec
 	paramspace types.ParamSubspace
+	authKeeper auth.AccountKeeper
+	bankKeeper types.BankKeeper
 }
 
 // NewKeeper creates a relcontractors keeper
-func NewKeeper(cdc *codec.Codec, key sdk.StoreKey) Keeper {
+func NewKeeper(cdc *codec.Codec, key sdk.StoreKey, authKeeper auth.AccountKeeper, bankKeeper types.BankKeeper) Keeper {
 	keeper := Keeper{
-		storeKey: key,
-		cdc:      cdc,
+		storeKey:   key,
+		cdc:        cdc,
+		authKeeper: authKeeper,
+		bankKeeper: bankKeeper,
 	}
 	return keeper
 }
@@ -73,4 +78,23 @@ func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) 
 		}
 	}
 	return contractor, nil
+}
+
+/*
+	1) Check first if account with given address already existed.
+	2) If there is no account, create new account with given address.
+	3) Send defined coins in poll to given address
+*/
+
+func (k Keeper) SendCoinsToContractor(ctx sdk.Context, address sdk.AccAddress, amount sdk.Coin) error {
+	account := k.authKeeper.GetAccount(ctx, address)
+	if account == nil {
+		newAccount := k.authKeeper.NewAccountWithAddress(ctx, address)
+		if newAccount == nil {
+			errors.New("failed to create new account with given address")
+		}
+	}
+	coins := []sdk.Coin{amount}
+	_, err := k.bankKeeper.AddCoins(ctx, address, coins)
+	return err
 }

@@ -17,6 +17,10 @@ func NewHandler(k Keeper) sdk.Handler {
 			return handleMsgUpdateReContractorAddress(ctx, k, msg)
 		case MsgCreatePoll:
 			return handleMsgCreatePoll(ctx, k, msg)
+		case MsgVotePoll:
+			return handleMsgVotePoll(ctx, k, msg)
+		case MsgProcessPoll:
+			return handleMsgProcessPoll(ctx, k, msg)
 		//
 		//Example:
 		// case Msg<Action>:

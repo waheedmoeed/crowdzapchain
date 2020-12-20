@@ -32,9 +32,9 @@ func DefaultGenesisState() GenesisState {
 func createDefaultState(mintedCoins int, distributedCoins int, relContractors []Contractor) GenesisState {
 	return GenesisState{
 		RelContract: RelContract{
-			MintedCoins:          sdk.Coin{"rel", sdk.NewInt(int64(mintedCoins))},
+			MintedCoins:          sdk.Coin{Denom: "rel", Amount: sdk.NewInt(int64(mintedCoins))},
 			MintedCoinsRecord:    nil,
-			DistributedCoins:     sdk.Coin{"rel", sdk.NewInt(int64(distributedCoins))},
+			DistributedCoins:     sdk.Coin{Denom: "rel", Amount: sdk.NewInt(int64(distributedCoins))},
 			DistributedCoinsLogs: nil, //todo: add logs/records of initial distribution, if needed.
 			RelContractors:       relContractors,
 			VotingPolls:          nil,

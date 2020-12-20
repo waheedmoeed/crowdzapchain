@@ -37,7 +37,12 @@ type (
 	Params                        = types.Params
 	RelContract                   = types.RelContract
 	VotingPoll                    = types.VotingPoll
+	CoinsMintedRecord             = types.CoinsMintedRecord
+	DistributedCoinsRecord        = types.DistributedCoinsRecord
 	MsgUpdateRelContractorAddress = types.MsgUpdateRelContractorAddress
 	MsgCreatePoll                 = types.MsgCreatePoll
-	// TODO: Fill out module types
+	MsgVotePoll                   = types.MsgVotePoll
+	MsgProcessPoll                = types.MsgProcessPoll
+
+	BankKeeper = types.BankKeeper
 )

@@ -55,6 +55,8 @@ type VotingPoll struct {
 	PositiveVotesAddress []sdk.AccAddress `json:"positive_votes_address"`
 	NegativeVotesAddress []sdk.AccAddress `json:"negative_votes_address"`
 	OwnerVoterPoll       sdk.AccAddress   `json:"owner_voter_poll"`
+	Processed            bool             `json:"processed"`
+	CoinsAmount          sdk.Coin         `json:"coins_amount"`
 }
 
 // NewWhois returns a new Whois with the  as the price
