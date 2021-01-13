@@ -1,0 +1,69 @@
+{
+  "rel_contract": {
+    "minted_coins": {
+      "denom": "rel",
+      "amount": "10000"
+    },
+    "minted_coins_record": null,
+    "distributed_coins": {
+      "denom": "rel",
+      "amount": "2000"
+    },
+    "distributed_coins_logs": [
+      {
+        "contractor_address": "cosmos12hhfqm2qqm23n6zkdl46vlegrsnlna8ld349v9",
+        "coins": {
+          "denom": "rel",
+          "amount": "1000"
+        },
+        "issued_date": "2020-12-25T15:04:05.000Z",
+        "distributed_coins_amount": {
+          "denom": "rel",
+          "amount": "0"
+        }
+      },
+      {
+        "contractor_address": "cosmos13p8s04502l7f5uxhwfdqmthd6yt4par0ekwvpe",
+        "coins": {
+          "denom": "rel",
+          "amount": "1000"
+        },
+        "issued_date": "2020-12-25T15:04:05.000Z",
+        "distributed_coins_amount": {
+          "denom": "rel",
+          "amount": "1000"
+        }
+      },
+      {
+        "contractor_address": "cosmos1f6xhs3pljwurlexjq7cunvp4adxleylp06fdnr",
+        "coins": {
+          "denom": "rel",
+          "amount": "1000"
+        },
+        "issued_date": "2020-12-25T15:04:05.000Z",
+        "distributed_coins_amount": {
+          "denom": "rel",
+          "amount": "2000"
+        }
+      }
+    ],
+    "rel_contractors": [
+      {
+        "contractor_address": "cosmos12hhfqm2qqm23n6zkdl46vlegrsnlna8ld349v9",
+        "contractor_name": "abdul",
+        "other_addresses": null
+      },
+      {
+        "contractor_address": "cosmos13p8s04502l7f5uxhwfdqmthd6yt4par0ekwvpe",
+        "contractor_name": "haroon",
+        "other_addresses": null
+      },
+      {
+        "contractor_address": "cosmos1f6xhs3pljwurlexjq7cunvp4adxleylp06fdnr",
+        "contractor_name": "nadeem",
+        "other_addresses": null
+      }
+    ],
+    "voting_polls": null
+  }
+}
