@@ -3,6 +3,7 @@ package relcontractors
 import (
 	"crypto/rand"
 	"errors"
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"time"
@@ -10,20 +11,12 @@ import (
 
 //change contractor address with new provided address and add old one to other addresses
 func handleMsgUpdateReContractorAddress(ctx sdk.Context, k Keeper, msg MsgUpdateRelContractorAddress) (*sdk.Result, error) {
-	contractor, err := k.GetContractorByAddress(ctx, msg.RelContractorAddress)
+	err := k.UpdateContractorByAddress(ctx, msg.RelContractorAddress, msg.NewRelContractorAddress)
 	if err != nil {
 		return nil, err
 	}
-	for _, value := range contractor.OtherAddresses {
-		if value.Equals(msg.NewRelContractorAddress) {
-			return nil, errors.New("address already present in contractor")
-		}
-	}
-	addresses := append(contractor.OtherAddresses, msg.RelContractorAddress)
-	//update contractor values
-	contractor.OtherAddresses = addresses
-	contractor.ContractorAddress = msg.NewRelContractorAddress
-	//TODO: Add events here
+	fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+	fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
 

@@ -61,24 +61,60 @@ func (k Keeper) Set(ctx sdk.Context, contract types.RelContract) {
 	bz := k.cdc.MustMarshalBinaryLengthPrefixed(contract)
 	store.Set(contractKey, bz)
 }
-
-//Get contractor from store by matching addresses
-func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) (types.Contractor, error) {
+func (k Keeper) UpdateContractorByAddress(ctx sdk.Context, address sdk.AccAddress, newAddress sdk.AccAddress) (error) {
 	store := ctx.KVStore(k.storeKey)
 	var contract types.RelContract
 	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(contractKey), &contract)
 	if err != nil {
-		return types.Contractor{}, err
+		return err
+	}
+
+	var contractorIndex = 0
+	contractor := types.Contractor{}
+	for index, value := range contract.RelContractors {
+		if value.ContractorAddress.Equals(address) {
+			contractor = value
+			contractorIndex = index
+			break
+		}
+	}
+	if !contractor.ContractorAddress.Empty(){
+		errors.New("contractor not founded for respective address")
+	}
+	addresses := append(contractor.OtherAddresses, newAddress)
+	contractor.OtherAddresses = addresses
+	contractor.ContractorAddress = newAddress
+
+	//add to contract
+	contract.RelContractors[contractorIndex] = contractor
+	k.Set(ctx, contract)
+	return nil
+}
+
+//Get contractor from store by matching addresses
+func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) (types.Contractor,error) {
+	store := ctx.KVStore(k.storeKey)
+	var contract types.RelContract
+	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(contractKey), &contract)
+	if err != nil {
+		return types.Contractor{},err
 	}
 	contractor := types.Contractor{}
+
+
 	for _, value := range contract.RelContractors {
 		if value.ContractorAddress.Equals(address) {
 			contractor = value
 			break
 		}
 	}
+	if contractor.ContractorAddress.Empty(){
+		return types.Contractor{},errors.New("failed to find contractor with respective address")
+	}
 	return contractor, nil
 }
+
+
 
 /*
 	1) Check first if account with given address already existed.

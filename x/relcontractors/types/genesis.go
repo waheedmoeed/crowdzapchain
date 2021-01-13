@@ -51,6 +51,7 @@ func getNewAccount() (address sdk.AccAddress) {
 
 // ValidateGenesis validates the relcontractors genesis parameters
 func ValidateGenesis(data GenesisState) error {
+	fmt.Println(data)
 	if data.RelContract.MintedCoins.Amount.Int64() < int64(100) {
 		return fmt.Errorf("invalid MintedCoins: Value: %s. Error: Must be greater than 100", data.RelContract.MintedCoins.String())
 	}

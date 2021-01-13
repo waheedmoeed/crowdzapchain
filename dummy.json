@@ -1,0 +1,28 @@
+{
+  "type": "cosmos-sdk/StdTx",
+  "value": {
+    "msg": [
+      {
+        "type": "relcontractors/update_relcontractor_address",
+        "value": {
+          "rel_contractor_address": "cosmos1at8lxwf5fngzs3g20n84qt5x5nq2t2uymf6mtn",
+          "new_rel_contractor_address": "cosmos18x9my7vst6svm65sug8cjt2h060j5nd9mkdj3p"
+        }
+      }
+    ],
+    "fee": {
+      "amount": [],
+      "gas": "200000"
+    },
+    "signatures":  [
+      {
+        "pub_key": {
+          "type": "tendermint/PubKeySecp256k1",
+          "value": "AuMtOAErHFHOKtPrdZZUODoHPpZSHAuJ4LeNN88k3ygr"
+        },
+        "signature": "UjO1qJgpCSFlDUpj8ejP14sGbnMvIKhbiVngju123fgHt7iWWaeer8FmL7bbYqWPL/U1qfVQr+HlBIUhXLfiQA=="
+      }
+    ],
+    "memo": ""
+  }
+}

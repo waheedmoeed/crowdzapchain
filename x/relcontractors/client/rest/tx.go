@@ -2,6 +2,7 @@ package rest
 
 // The packages below are commented out at first to prevent an error if this file isn't initially saved.
 import (
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
@@ -13,6 +14,7 @@ import (
 
 //Add new address of rel contractor
 func updateRelContractorAddressHandler(cliCtx context.CLIContext) http.HandlerFunc {
+	fmt.Println("register")
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req UpdateRelContractorAddressReq
 

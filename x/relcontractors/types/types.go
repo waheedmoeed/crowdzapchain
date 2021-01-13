@@ -17,8 +17,9 @@ type RelContract struct {
 	MintedCoins       sdk.Coin            `json:"minted_coins"`
 	MintedCoinsRecord []CoinsMintedRecord `json:"minted_coins_record"`
 
-	DistributedCoins     sdk.Coin                 `json:distributed_coins`
-	DistributedCoinsLogs []DistributedCoinsRecord `json:"rel_contractors_coins"`
+	DistributedCoins     sdk.Coin                 `json:"distributed_coins"`
+	//TODO Change json name according to variable
+	DistributedCoinsLogs []DistributedCoinsRecord `json:"distributed_coins_logs"`
 
 	RelContractors []Contractor `json:"rel_contractors"`
 
@@ -26,13 +27,13 @@ type RelContract struct {
 }
 
 type Contractor struct {
-	ContractorAddress sdk.AccAddress   `json:contractor_address`
-	Name              string           `json:contractor_name`
+	ContractorAddress sdk.AccAddress   `json:"contractor_address""`
+	Name              string           `json:"contractor_name""`
 	OtherAddresses    []sdk.AccAddress `json:"other_addresses"`
 }
 
 type DistributedCoinsRecord struct {
-	ContractorAddress      sdk.AccAddress `json:contractor_address`
+	ContractorAddress      sdk.AccAddress `json:"contractor_address""`
 	Coins                  sdk.Coin       `json:"coins"`
 	IssuedDate             time.Time      `json:"issued_date"`
 	DistributedCoinsAmount sdk.Coin       `json:"distributed_coins_amount"` //amount of distributed coins at the time of distribution
@@ -42,7 +43,7 @@ type DistributedCoinsRecord struct {
 type CoinsMintedRecord struct {
 	Coins           sdk.Coin         `json:"coins"`
 	Date            time.Time        `json:"date"`
-	VoterContractor []sdk.AccAddress `json:contractor_addresses`
+	VoterContractor []sdk.AccAddress `json:"contractor_addresses:`
 }
 
 type VotingPoll struct {

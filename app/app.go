@@ -70,7 +70,7 @@ var (
 // returned.
 func MakeCodec() *codec.Codec {
 	var cdc = codec.New()
-
+	//relcontractors.RegisterCodec(cdc)
 	ModuleBasics.RegisterCodec(cdc)
 	vesting.RegisterCodec(cdc)
 	sdk.RegisterCodec(cdc)
@@ -219,6 +219,7 @@ func NewInitApp(
 
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
+
 	app.mm = module.NewManager(
 		genutil.NewAppModule(app.accountKeeper, app.stakingKeeper, app.BaseApp.DeliverTx),
 		auth.NewAppModule(app.accountKeeper),

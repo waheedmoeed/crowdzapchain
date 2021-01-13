@@ -1,12 +1,12 @@
 package keeper
 
 import (
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/waheedmoeed/relchain/x/relcontractors/types"
-
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	abci "github.com/tendermint/tendermint/abci/types"
+	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 )
 
 const (
@@ -49,15 +49,21 @@ func queryMintDistCoins(ctx sdk.Context, k Keeper) ([]byte, error) {
 	if error != nil {
 		return nil, error
 	}
+	/*
+
 	type response struct {
-		minted_coins      sdk.Coin
-		distributed_coins sdk.Coin
+		minted_coins      int64
+		distributed_coins int64
 	}
+
 	output := response{
-		minted_coins:      contract.MintedCoins,
-		distributed_coins: contract.DistributedCoins,
+		minted_coins:      contract.MintedCoins.Amount.Int64(),
+		distributed_coins: contract.DistributedCoins.Amount.Int64(),
 	}
-	res, err := codec.MarshalJSONIndent(k.cdc, output)
+	fmt.Println(output)*/
+	res, err := codec.MarshalJSONIndent(k.cdc, contract.MintedCoins)
+	//res , err := json.Marshal(output)
+	fmt.Println(res)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
 	}
