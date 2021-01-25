@@ -1,12 +1,17 @@
 {
   "type": "cosmos-sdk/StdTx",
   "value": {
-    "msg": [
+    "msg":[
       {
-        "type": "relcontractors/update_relcontractor_address",
-        "value": {
-          "rel_contractor_address": "cosmos1at8lxwf5fngzs3g20n84qt5x5nq2t2uymf6mtn",
-          "new_rel_contractor_address": "cosmos18x9my7vst6svm65sug8cjt2h060j5nd9mkdj3p"
+        "type":"relcontractors/create_poll",
+        "value":{
+          "type":"1",
+          "start_time":"2021-01-25T09:26:00.000Z",
+          "end_time":"2021-01-27T09:30:00.000Z",
+          "owner_voter_poll":"cosmos1pu3muxnx03ewrjya7wmvp9skyvlgunjwahua4u",
+          "coins_amount":{
+            "denom":"rel",
+            "amount":"100"}
         }
       }
     ],
@@ -14,13 +19,13 @@
       "amount": [],
       "gas": "200000"
     },
-    "signatures":  [
+    "signatures": [
       {
         "pub_key": {
           "type": "tendermint/PubKeySecp256k1",
-          "value": "AuMtOAErHFHOKtPrdZZUODoHPpZSHAuJ4LeNN88k3ygr"
+          "value": "A0X7b/NB2ZB+pv1HWWZIEOeTkvWIQG0fnFPgbnS9f3TI"
         },
-        "signature": "UjO1qJgpCSFlDUpj8ejP14sGbnMvIKhbiVngju123fgHt7iWWaeer8FmL7bbYqWPL/U1qfVQr+HlBIUhXLfiQA=="
+        "signature": "ik5yKPbiGLjFHZXWXWrjQvs1PPrlmdjk+Tw7mWQLrJRsC8c52CzU/vc+k1XlGbVnHjJHnTY5h6tmb/jMOaIdHA=="
       }
     ],
     "memo": ""

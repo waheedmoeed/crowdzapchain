@@ -17,7 +17,7 @@ type RelContract struct {
 	MintedCoins       sdk.Coin            `json:"minted_coins"`
 	MintedCoinsRecord []CoinsMintedRecord `json:"minted_coins_record"`
 
-	DistributedCoins     sdk.Coin                 `json:"distributed_coins"`
+	DistributedCoins sdk.Coin `json:"distributed_coins"`
 	//TODO Change json name according to variable
 	DistributedCoinsLogs []DistributedCoinsRecord `json:"distributed_coins_logs"`
 
@@ -88,7 +88,7 @@ func coinsMintedRecordString(records []CoinsMintedRecord) string {
 	for _, value := range records {
 		coinsMintedRecord = coinsMintedRecord + fmt.Sprintf(
 			`Coins: %s
-			Date: %d
+			Date: %s
 			Contractrors_Positive: %s`,
 			value.Coins.String(),
 			value.Date,
@@ -104,7 +104,7 @@ func distributedCoinsLogsString(records []DistributedCoinsRecord) string {
 		distributedCoinsLogs = distributedCoinsLogs + fmt.Sprintf(
 			`ContractorAddress: %s
 					Coins: %s
-					IssuedDate: %d
+					IssuedDate: %s
 					DistributedCoinsAmount: %s`,
 			value.ContractorAddress.String(),
 			value.Coins.String(),
@@ -115,6 +115,9 @@ func distributedCoinsLogsString(records []DistributedCoinsRecord) string {
 	return strings.TrimSpace(distributedCoinsLogs)
 }
 
+//////////////////
+//////////////////
+//////////////////
 func relContractorString(contracters []Contractor) string {
 	relContractors := ""
 	for _, value := range contracters {
@@ -135,8 +138,8 @@ func votingPollsString(poll []VotingPoll) string {
 	for _, value := range poll {
 		votingPolls = votingPolls + fmt.Sprintf(`
 			PollType: %d
-			StartTime: %d
-			EndTime: %d 
+			StartTime: %s
+			EndTime: %s
 			PositiveVotes: %d
 			NegativeVotes: %d
 			PositiveVotesAddress %s

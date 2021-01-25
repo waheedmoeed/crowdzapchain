@@ -85,7 +85,7 @@ func checkDistributionAddress(data GenesisState) error {
 				}
 			}
 			if founded == false {
-				return fmt.Errorf("% :mismatch must be in both relcontractor and distributed record", value)
+				return fmt.Errorf("%s :mismatch must be in both relcontractor and distributed record", value)
 			}
 		}
 	}

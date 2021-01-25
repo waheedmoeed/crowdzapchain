@@ -14,7 +14,7 @@ type UpdateRelContractorAddressReq struct {
 
 type CreateVotingPollReq struct {
 	BaseReq        rest.BaseReq   `json:"base_req"`
-	PollType       uint           `json:"type"`
+	PollType       uint           `json:"poll_type"`
 	StartTime      time.Time      `json:"start_time"`
 	EndTime        time.Time      `json:"end_time"`
 	OwnerVoterPoll sdk.AccAddress `json:"owner_voter_poll"`

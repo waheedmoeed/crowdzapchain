@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -28,13 +29,14 @@ func GetTxCmd(cdc *codec.Codec) *cobra.Command {
 
 	chainserviceTxCmd.AddCommand(flags.PostCommands(
 	 //TODO: Add tx based commands
-	 	GetCmdUpdateRelContractor(cdc),
+	 	CmdUpdateRelContractor(cdc),
+		CmdCreateNewPoll(cdc),
 	)...)
 
 	return chainserviceTxCmd
 }
 
- func GetCmdUpdateRelContractor(cdc *codec.Codec) *cobra.Command {
+ func CmdUpdateRelContractor(cdc *codec.Codec) *cobra.Command {
  	return &cobra.Command{
  		Use:   "update-rel-contractor [newAddress]",
  		Short: "add new rel contractor in contract",
@@ -57,3 +59,28 @@ func GetTxCmd(cdc *codec.Codec) *cobra.Command {
  		},
  	}
  }
+
+func CmdCreateNewPoll(cdc *codec.Codec) *cobra.Command {
+	return &cobra.Command{
+		Use:   "create-new-poll",
+		Short: "create new poll it could be mint or distribute poll",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx := context.NewCLIContext().WithCodec(cdc)
+			inBuf := bufio.NewReader(cmd.InOrStdin())
+			txBldr := auth.NewTxBuilderFromCLI(inBuf).WithTxEncoder(utils.GetTxEncoder(cdc))
+			startTime := time.Now().Add(time.Hour)
+			endTime := time.Now().Add(time.Hour * 50)
+			msg := types.NewMsgCreatePoll(1, startTime, endTime, cliCtx.FromAddress, sdk.Coin{
+				Denom:  "rel",
+				Amount: sdk.NewInt(100),
+			} )
+			err := msg.ValidateBasic()
+			if err != nil {
+				return err
+			}
+
+			return utils.GenerateOrBroadcastMsgs(cliCtx, txBldr, []sdk.Msg{msg})
+		},
+	}
+}

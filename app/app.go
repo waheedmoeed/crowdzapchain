@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"github.com/waheedmoeed/relchain/x/relcontractors"
+	//"github.com/waheedmoeed/relchain/x/smartcontracts"
 	"io"
 	"os"
 
@@ -54,6 +55,7 @@ var (
 		slashing.AppModuleBasic{},
 		supply.AppModuleBasic{},
 		relcontractors.AppModule{},
+		//smartcontracts.AppModule{},
 		// TODO: Add your module(s) AppModuleBasic
 	)
 
@@ -102,6 +104,7 @@ type NewApp struct {
 	supplyKeeper         supply.Keeper
 	paramsKeeper         params.Keeper
 	relContractorsKeeper relcontractors.Keeper
+	//smartContractsKeeper smartcontracts.Keeper
 	// TODO: Add your module(s)
 
 	// Module Manager
@@ -128,6 +131,7 @@ func NewInitApp(
 	bApp.SetAppVersion(version.Version)
 
 	// TODO: Add the keys that module requires
+	//smartcontracts.StoreKey
 	keys := sdk.NewKVStoreKeys(bam.MainStoreKey, auth.StoreKey, staking.StoreKey,
 		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey, relcontractors.StoreKey)
 
@@ -215,6 +219,16 @@ func NewInitApp(
 		app.accountKeeper,
 		app.bankKeeper,
 	)
+
+	/*
+		app.smartContractsKeeper = smartcontracts.NewKeeper(
+			app.cdc,
+			keys[smartcontracts.StoreKey],
+			app.accountKeeper,
+			app.bankKeeper,
+		)
+
+	*/
 	// TODO: Add your module(s) keepers
 
 	// NOTE: Any module instantiated in the module manager that is later modified
@@ -227,10 +241,11 @@ func NewInitApp(
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
 		distr.NewAppModule(app.distrKeeper, app.accountKeeper, app.supplyKeeper, app.stakingKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
-		// TODO: Add your module(s)
-		relcontractors.NewAppModule(app.relContractorsKeeper, app.accountKeeper, app.bankKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
+		// TODO: Add your module(s)
+		relcontractors.NewAppModule(app.relContractorsKeeper, app.accountKeeper, app.bankKeeper),
+		//smartcontracts.NewAppModule(app.smartContractsKeeper, app.accountKeeper, app.bankKeeper),
 	)
 	// During begin block slashing happens after distr.BeginBlocker so that
 	// there is nothing left over in the validator fee pool, so as to keep the

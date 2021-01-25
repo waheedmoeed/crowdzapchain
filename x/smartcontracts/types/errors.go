@@ -7,6 +7,5 @@ import (
 // TODO: Fill out some custom errors for the module
 // You can see how they are constructed below:
 var (
-	ErrInvalid            = sdkerrors.Register(ModuleName, 1, "custom error message")
-	ErrInvalidTimeForPoll = sdkerrors.Register(ModuleName, 2, "Time of poll start or end invalid")
+	ErrInvalid = sdkerrors.Register(ModuleName, 1, "custom error message")
 )

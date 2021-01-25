@@ -4,7 +4,7 @@
       "denom": "rel",
       "amount": "10000"
     },
-    "minted_coins_record": null,
+    "minted_coins_record": [],
     "distributed_coins": {
       "denom": "rel",
       "amount": "2000"
@@ -51,19 +51,19 @@
       {
         "contractor_address": "cosmos12hhfqm2qqm23n6zkdl46vlegrsnlna8ld349v9",
         "contractor_name": "abdul",
-        "other_addresses": null
+        "other_addresses": []
       },
       {
         "contractor_address": "cosmos13p8s04502l7f5uxhwfdqmthd6yt4par0ekwvpe",
         "contractor_name": "haroon",
-        "other_addresses": null
+        "other_addresses": []
       },
       {
         "contractor_address": "cosmos1f6xhs3pljwurlexjq7cunvp4adxleylp06fdnr",
         "contractor_name": "nadeem",
-        "other_addresses": null
+        "other_addresses": []
       }
     ],
-    "voting_polls": null
+    "voting_polls": []
   }
 }

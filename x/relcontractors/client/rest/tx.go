@@ -77,9 +77,7 @@ func createVotingPollHandler(cliCtx context.CLIContext) http.HandlerFunc {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
-
 		utils.WriteGenerateStdTxResponse(w, cliCtx, baseReq, []sdk.Msg{msg})
-
 	}
 }
 
@@ -106,9 +104,7 @@ func votePollHandler(cliCtx context.CLIContext) http.HandlerFunc {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
-
 		utils.WriteGenerateStdTxResponse(w, cliCtx, baseReq, []sdk.Msg{msg})
-
 	}
 }
 
@@ -139,27 +135,3 @@ func processPollHandler(cliCtx context.CLIContext) http.HandlerFunc {
 
 	}
 }
-
-/*
-// Action TX body
-type <Action>Req struct {
-	BaseReq rest.BaseReq `json:"base_req" yaml:"base_req"`
-	// TODO: Define more types if needed
-}
-
-func <Action>RequestHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var req <Action>Req
-		vars := mux.Vars(r)
-
-		baseReq := req.BaseReq.Sanitize()
-		if !baseReq.ValidateBasic(w) {
-			return
-		}
-
-		// TODO: Define the module tx logic for this action
-
-		utils.WriteGenerateStdTxResponse(w, cliCtx, BaseReq, []sdk.Msg{msg})
-	}
-}
-*/

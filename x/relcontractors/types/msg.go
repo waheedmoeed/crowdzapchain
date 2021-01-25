@@ -1,7 +1,6 @@
 package types
 
 import (
-	"errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkErrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"time"
@@ -52,7 +51,7 @@ func NewMsgCreatePoll(pollType uint, startTime time.Time, endTime time.Time, own
 func (msg MsgCreatePoll) Route() string { return RouterKey }
 func (msg MsgCreatePoll) Type() string  { return "create_poll" }
 func (msg MsgCreatePoll) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{sdk.AccAddress(msg.OwnerVoterPoll)}
+	return []sdk.AccAddress{msg.OwnerVoterPoll}
 }
 
 // GetSignBytes gets the bytes for the message signer to sign on
@@ -67,7 +66,7 @@ func (msg MsgCreatePoll) ValidateBasic() error {
 		return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Invalid type of pool")
 	}
 	if msg.EndTime.Sub(msg.StartTime).Hours() < 24 {
-		return sdkErrors.Wrap(errors.New("Time Duration for poll must be greater than 24 hours"), "")
+		return sdkErrors.Wrap(sdkErrors.New("poll creation", 234, "POll Validation"), "Time to vote is less than 24 hours")
 	}
 	return nil
 }
@@ -102,7 +101,7 @@ func (msg MsgVotePoll) ValidateBasic() error {
 	if msg.Vote == 0 || msg.Vote == 1 {
 		return nil
 	}
-	return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Invalid vote")
+	return sdkErrors.Wrap(sdkErrors.New("poll vote", 234, "POll Voting"), "Invalid vote")
 }
 
 /*

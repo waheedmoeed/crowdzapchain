@@ -13,7 +13,7 @@ import (
 
 var contractKey = []byte("cosmos1h4sf6s3xvkh04wahfg8ncm7yh9p22ds7rpyyrc")
 
-// Keeper of the relcontractors store
+// Keeper of the relContractors store
 type Keeper struct {
 	storeKey   sdk.StoreKey
 	cdc        *codec.Codec
@@ -22,7 +22,7 @@ type Keeper struct {
 	bankKeeper types.BankKeeper
 }
 
-// NewKeeper creates a relcontractors keeper
+// NewKeeper creates a relContractors keeper
 func NewKeeper(cdc *codec.Codec, key sdk.StoreKey, authKeeper auth.AccountKeeper, bankKeeper types.BankKeeper) Keeper {
 	keeper := Keeper{
 		storeKey:   key,
@@ -45,7 +45,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-// Get returns the pubkey from the adddress-pubkey relation
+// Get returns the pubKey from the address-pubKey relation
 func (k Keeper) Get(ctx sdk.Context) (types.RelContract, error) {
 	store := ctx.KVStore(k.storeKey)
 	var contract types.RelContract
@@ -56,12 +56,15 @@ func (k Keeper) Get(ctx sdk.Context) (types.RelContract, error) {
 	return contract, nil
 }
 
+//Set new RelContract in DB
 func (k Keeper) Set(ctx sdk.Context, contract types.RelContract) {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshalBinaryLengthPrefixed(contract)
 	store.Set(contractKey, bz)
 }
-func (k Keeper) UpdateContractorByAddress(ctx sdk.Context, address sdk.AccAddress, newAddress sdk.AccAddress) (error) {
+
+//Add new address to any specific contractor
+func (k Keeper) UpdateContractorByAddress(ctx sdk.Context, address sdk.AccAddress, newAddress sdk.AccAddress) error {
 	store := ctx.KVStore(k.storeKey)
 	var contract types.RelContract
 	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(contractKey), &contract)
@@ -78,10 +81,10 @@ func (k Keeper) UpdateContractorByAddress(ctx sdk.Context, address sdk.AccAddres
 			break
 		}
 	}
-	if !contractor.ContractorAddress.Empty(){
+	if !contractor.ContractorAddress.Empty() {
 		errors.New("contractor not founded for respective address")
 	}
-	addresses := append(contractor.OtherAddresses, newAddress)
+	addresses := append(contractor.OtherAddresses, address)
 	contractor.OtherAddresses = addresses
 	contractor.ContractorAddress = newAddress
 
@@ -92,15 +95,12 @@ func (k Keeper) UpdateContractorByAddress(ctx sdk.Context, address sdk.AccAddres
 }
 
 //Get contractor from store by matching addresses
-func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) (types.Contractor,error) {
-	store := ctx.KVStore(k.storeKey)
-	var contract types.RelContract
-	err := k.cdc.UnmarshalBinaryLengthPrefixed(store.Get(contractKey), &contract)
+func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) (types.Contractor, error) {
+	contract, err := k.Get(ctx)
 	if err != nil {
-		return types.Contractor{},err
+		return types.Contractor{}, err
 	}
 	contractor := types.Contractor{}
-
 
 	for _, value := range contract.RelContractors {
 		if value.ContractorAddress.Equals(address) {
@@ -108,13 +108,24 @@ func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) 
 			break
 		}
 	}
-	if contractor.ContractorAddress.Empty(){
-		return types.Contractor{},errors.New("failed to find contractor with respective address")
+	if contractor.ContractorAddress.Empty() {
+		return types.Contractor{}, errors.New("failed to find contractor with respective address")
 	}
 	return contractor, nil
 }
 
-
+//Get latest poll
+func (k Keeper) GetLatestPollAndContract(ctx sdk.Context) (types.RelContract, types.VotingPoll, error) {
+	contract, err := k.Get(ctx)
+	if err != nil {
+		return types.RelContract{}, types.VotingPoll{}, err
+	}
+	index := len(contract.VotingPolls)
+	if len(contract.VotingPolls) == 0 {
+		return contract, types.VotingPoll{}, nil
+	}
+	return contract, contract.VotingPolls[index], nil
+}
 
 /*
 	1) Check first if account with given address already existed.

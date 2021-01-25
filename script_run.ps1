@@ -35,7 +35,7 @@ Write-Host "adding abdulvalidator account to genesis state"
 .\appd.exe add-genesis-account $(..\appcli\appcli.exe keys show abdulvalidator -a) 1000rel,100000000stake
 
 Write-Host "adding contract account to genesis state"
-.\appd.exe add-genesis-account cosmos17d2rjagxx2zzxvplgfhrunn2rluk86xy6kgkt5 1000rel
+.\appd.exe add-genesis-account cosmos1ss4h432u3ltnf624kaj9k4ackukhzazntm2ryr 1000rel
 .\appd.exe add-genesis-account cosmos167n2fd2qwzazthe8gpccv3ewj3f03kz3hw3ncr 1000rel
 .\appd.exe add-genesis-account cosmos18x9my7vst6svm65sug8cjt2h060j5nd9mkdj3p 1000rel
 
@@ -61,7 +61,7 @@ $a = Get-Content $pathToJsonGenesis -raw | ConvertFrom-Json
 #$abdulAddress = $a.app_state.auth.accounts.Get(0).value.address
 #$haroonAddress = $a.app_state.auth.accounts.Get(1).value.address
 #$waheedTestAddress = $a.app_state.auth.accounts.Get(1).value.address
-$abdulAddress = 'cosmos17d2rjagxx2zzxvplgfhrunn2rluk86xy6kgkt5'
+$abdulAddress = 'cosmos1ss4h432u3ltnf624kaj9k4ackukhzazntm2ryr'
 $haroonAddress = 'cosmos167n2fd2qwzazthe8gpccv3ewj3f03kz3hw3ncr'
 $nadeemAddress = 'cosmos18x9my7vst6svm65sug8cjt2h060j5nd9mkdj3p'
 #Write-Host "$du"

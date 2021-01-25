@@ -29,6 +29,8 @@ var (
 	// variable aliases
 	ModuleCdc = types.ModuleCdc
 	// TODO: Fill out variable aliases
+
+	//TODO:: Custom Error registration
 )
 
 type (

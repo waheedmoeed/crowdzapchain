@@ -1,11 +1,10 @@
 package relcontractors
 
 import (
-	"crypto/rand"
-	"errors"
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"math/rand"
 	"time"
 )
 
@@ -15,21 +14,31 @@ func handleMsgUpdateReContractorAddress(ctx sdk.Context, k Keeper, msg MsgUpdate
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-	fmt.Println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
 
+//Create new voting poll in contract
 func handleMsgCreatePoll(ctx sdk.Context, k Keeper, msg MsgCreatePoll) (*sdk.Result, error) {
-	contractor, err := k.Get(ctx)
+	contract, latestPoll, err := k.GetLatestPollAndContract(ctx)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "Failed to read relContract from store")
 	}
+	//Check latest poll if it is still valid( end-time not reached or not processed )
+	if !(latestPoll.PollId == "") {
+		if latestPoll.EndTime.Equal(time.Now()) || !latestPoll.Processed {
+			return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("poll creation", 234, "Poll Creation"), "Already another poll is valid")
+		}
+	}
 	//generate unique ID for every voting poll
-	b := make([]byte, 16)
-	_, error := rand.Read(b)
-	if err != nil {
-		return &sdk.Result{}, sdkerrors.Wrap(error, "Failed to generate new Id for voting poll")
+	b := make([]byte, 22)
+	for i := 0; i < 22; i++ {
+		b[i] = byte(97 + rand.Intn(122-97))
+	}
+	//check validity of:
+	//start(must be greater than now time)
+	//end time (must be greater than 24 hour )
+	if msg.StartTime.Before(time.Now()) || msg.EndTime.Before(time.Now().Add(time.Hour*24)) {
+		return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("poll creation", 234, "Poll Creation"), "Time of poll start or end invalid")
 	}
 	poll := VotingPoll{
 		PollId:               string(b),
@@ -38,15 +47,15 @@ func handleMsgCreatePoll(ctx sdk.Context, k Keeper, msg MsgCreatePoll) (*sdk.Res
 		EndTime:              msg.EndTime,
 		PositiveVotes:        0,
 		NegativeVotes:        0,
-		PositiveVotesAddress: nil,
-		NegativeVotesAddress: nil,
+		PositiveVotesAddress: []sdk.AccAddress{},
+		NegativeVotesAddress: []sdk.AccAddress{},
 		OwnerVoterPoll:       msg.OwnerVoterPoll,
 		Processed:            false,
 		CoinsAmount:          msg.CoinsAmount,
 	}
-	newContract := append(contractor.VotingPolls, poll)
-	contractor.VotingPolls = newContract
-	k.Set(ctx, contractor)
+	newContract := append(contract.VotingPolls, poll)
+	contract.VotingPolls = newContract
+	k.Set(ctx, contract)
 	//TODO: Add events here
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
@@ -66,30 +75,34 @@ func handleMsgVotePoll(ctx sdk.Context, k Keeper, msg MsgVotePoll) (*sdk.Result,
 	}
 	if contractorFounded {
 		//find poll by given Id and validate is poll and voter valid to vote
-		for _, poll := range contractor.VotingPolls {
-			if poll.PollId == msg.PollId {
-				//time check and validate that poll is not yet processed
-				if checkPollValidity(poll.StartTime, poll.EndTime) && !poll.Processed {
-					if msg.Vote == 0 {
-						negativeVoters := append(poll.NegativeVotesAddress, msg.Voter)
-						poll.NegativeVotes = poll.NegativeVotes + 1
-						poll.NegativeVotesAddress = negativeVoters
-					} else {
-						positiveVoters := append(poll.PositiveVotesAddress, msg.Voter)
-						poll.PositiveVotes = poll.PositiveVotes + 1
-						poll.PositiveVotesAddress = positiveVoters
+		if len(contractor.VotingPolls) > 0 {
+			for _, poll := range contractor.VotingPolls {
+				if poll.PollId == msg.PollId {
+					//time check and validate that poll is not yet processed
+					if checkPollValidity(poll.StartTime, poll.EndTime) && !poll.Processed {
+						if msg.Vote == 0 {
+							negativeVoters := append(poll.NegativeVotesAddress, msg.Voter)
+							poll.NegativeVotes = poll.NegativeVotes + 1
+							poll.NegativeVotesAddress = negativeVoters
+						} else {
+							positiveVoters := append(poll.PositiveVotesAddress, msg.Voter)
+							poll.PositiveVotes = poll.PositiveVotes + 1
+							poll.PositiveVotesAddress = positiveVoters
+						}
+						k.Set(ctx, contractor)
+						//TODO: Add events
+						return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 					}
-					k.Set(ctx, contractor)
 					//TODO: Add events
-					return &sdk.Result{Events: ctx.EventManager().Events()}, nil
+					return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("vote poll", 235, "POll Voting"), "cannot vote in this poll, already expired")
 				}
-				//TODO: Add events
-				return &sdk.Result{}, sdkerrors.Wrap(errors.New("cannot vote in this poll, already expired"), "")
 			}
+		} else {
+			return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("vote poll", 235, "POll Voting"), "there is no poll to vote")
 		}
 	}
 	//TODO: Add events here
-	return &sdk.Result{}, sdkerrors.Wrap(errors.New("voter is not contractor"), "")
+	return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("vote poll", 235, "POll Voting"), "voter is not contractor")
 }
 
 func handleMsgProcessPoll(ctx sdk.Context, k Keeper, msg MsgProcessPoll) (*sdk.Result, error) {
@@ -105,23 +118,33 @@ func handleMsgProcessPoll(ctx sdk.Context, k Keeper, msg MsgProcessPoll) (*sdk.R
 		}
 	}
 	if contractorFounded {
-		for _, poll := range contract.VotingPolls {
-			if poll.PollId == msg.PollId {
-				//check if all contractor voted or time ended and check this poll not yet processed
-				if checkVotesProcess(contract, poll) && !poll.Processed {
-					error := processPoll(poll, contract, ctx, k)
-					if error != nil {
-						return &sdk.Result{}, sdkerrors.Wrap(error, "Failed to process poll "+poll.PollId)
+		if len(contract.VotingPolls) > 0 {
+			for _, poll := range contract.VotingPolls {
+				if poll.PollId == msg.PollId {
+					//check if all contractor voted or time ended and check this poll not yet processed
+					if checkVotesProcess(contract, poll) && !poll.Processed {
+						error := processPoll(poll, contract, ctx, k)
+						if error != nil {
+							return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("process poll", 236, "Process Poll"), fmt.Sprintf("Failed to process poll %s %s", poll.PollId, error))
+						}
+						return &sdk.Result{Events: ctx.EventManager().Events()}, nil
+					} else {
+						return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("process poll", 236, "Process Poll"), "cannot process this poll, to process it all contractors must vote or it reaches its expiry time")
 					}
 				}
-				return &sdk.Result{}, sdkerrors.Wrap(errors.New("cannot process this poll, to process it all contractors must vote or it reaches its expiry time"), "")
 			}
+			return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("process poll", 236, "Process Poll"), "failed to find any poll related to given id")
+		} else {
+			return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("process poll", 236, "Process Poll"), "there is no poll to process")
 		}
-		return &sdk.Result{}, sdkerrors.Wrap(errors.New("failed to find any poll related to given id"), "")
 	}
 	//TODO: Add events here
-	return &sdk.Result{}, sdkerrors.Wrap(errors.New("only rel contractors can process poll"), "")
+	return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("process poll", 236, "Process Poll"), "only rel contractors can process poll")
 }
+
+///////////////////////////
+/////HELPER METHODS///////
+/////////////////////////
 
 //check if poll is valid to be voted in terms of both start and end time
 func checkPollValidity(start time.Time, end time.Time) bool {
