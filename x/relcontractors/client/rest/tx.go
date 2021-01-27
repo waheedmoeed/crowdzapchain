@@ -3,13 +3,12 @@ package rest
 // The packages below are commented out at first to prevent an error if this file isn't initially saved.
 import (
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/client/context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	"github.com/waheedmoeed/relchain/x/relcontractors/types"
 	"net/http"
-
-	"github.com/cosmos/cosmos-sdk/client/context"
 )
 
 //Add new address of rel contractor
@@ -54,10 +53,10 @@ func updateRelContractorAddressHandler(cliCtx context.CLIContext) http.HandlerFu
 	}
 }
 
-//Create New Voting Poll by defining type of poll.
-func createVotingPollHandler(cliCtx context.CLIContext) http.HandlerFunc {
+//Vote to poll by ID
+func createPollHandler(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req CreateVotingPollReq
+		var req CreatePollReq
 
 		if !rest.ReadRESTReq(w, r, cliCtx.Codec, &req) {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, "failed to parse request")
@@ -71,7 +70,7 @@ func createVotingPollHandler(cliCtx context.CLIContext) http.HandlerFunc {
 
 		// TODO: Define the module tx logic for this action
 		// create the message
-		msg := types.NewMsgCreatePoll(req.PollType, req.StartTime, req.EndTime, req.OwnerVoterPoll, req.CoinsAmount)
+		msg := types.NewMsgCreateVotePoll(req.PollType, req.OwnerVoterPoll)
 		err := msg.ValidateBasic()
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	"math/rand"
 	"testing"
+	"time"
 )
 
 var name = "maTurtle"
@@ -17,11 +17,9 @@ func TestLOgic(t *testing.T) {
 }
 
 func TestTime(t *testing.T) {
-	bytes := make([]byte, 22)
-
-	for i := 0; i < 22; i++ {
-		bytes[i] = byte(97 + rand.Intn(122-97))
-	}
-	fmt.Println(string(bytes))
+	fg := time.Now()
+	fmt.Println(fg)
+	endTime := time.Now().Add(time.Hour * 24 * 2)
+	fmt.Println(endTime)
 	require.Equal(t, true, true)
 }

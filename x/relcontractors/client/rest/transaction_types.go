@@ -3,7 +3,6 @@ package rest
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	"time"
 )
 
 type UpdateRelContractorAddressReq struct {
@@ -12,13 +11,11 @@ type UpdateRelContractorAddressReq struct {
 	NewRelContractorAddress string       `json:"new_rel_contractor_address"`
 }
 
-type CreateVotingPollReq struct {
+type CreatePollReq struct {
 	BaseReq        rest.BaseReq   `json:"base_req"`
-	PollType       uint           `json:"poll_type"`
-	StartTime      time.Time      `json:"start_time"`
-	EndTime        time.Time      `json:"end_time"`
+	PollType       string         `json:"poll_type"`
 	OwnerVoterPoll sdk.AccAddress `json:"owner_voter_poll"`
-	CoinsAmount    sdk.Coin       `json:"coins_amount"`
+	//Amount         string 			`json:"amount"`
 }
 
 type VotePollReq struct {

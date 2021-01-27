@@ -42,9 +42,8 @@ type (
 	CoinsMintedRecord             = types.CoinsMintedRecord
 	DistributedCoinsRecord        = types.DistributedCoinsRecord
 	MsgUpdateRelContractorAddress = types.MsgUpdateRelContractorAddress
-	MsgCreatePoll                 = types.MsgCreatePoll
+	MsgCreateVotePoll             = types.MsgCreateVotePoll
 	MsgVotePoll                   = types.MsgVotePoll
 	MsgProcessPoll                = types.MsgProcessPoll
-
-	BankKeeper = types.BankKeeper
+	BankKeeper                    = types.BankKeeper
 )

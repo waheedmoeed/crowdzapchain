@@ -24,7 +24,7 @@ func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router, moduleName strin
 	r.HandleFunc("/broadcastTransaction", authrest.BroadcastTxRequest(cliCtx)).Methods("POST")
 	//REST transactions endpoints for this module
 	r.HandleFunc(fmt.Sprintf("/%s/updateRelContractor", moduleName), updateRelContractorAddressHandler(cliCtx)).Methods("POST")
-	r.HandleFunc(fmt.Sprintf("/%s/createVotingPoll", moduleName), createVotingPollHandler(cliCtx)).Methods("POST")
+	r.HandleFunc(fmt.Sprintf("/%s/createVotePoll", moduleName), createPollHandler(cliCtx)).Methods("POST")
 	r.HandleFunc(fmt.Sprintf("/%s/votePoll", moduleName), votePollHandler(cliCtx)).Methods("POST")
 	r.HandleFunc(fmt.Sprintf("/%s/processPoll", moduleName), processPollHandler(cliCtx)).Methods("POST")
 }

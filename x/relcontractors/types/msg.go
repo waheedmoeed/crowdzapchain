@@ -3,7 +3,6 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkErrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"time"
 )
 
 func NewMsgUpdateRelContractorAddress(relContractorAdd sdk.AccAddress, newRelContractAdd sdk.AccAddress) MsgUpdateRelContractorAddress {
@@ -38,36 +37,27 @@ func (msg MsgUpdateRelContractorAddress) ValidateBasic() error {
 
 
  */
-
-func NewMsgCreatePoll(pollType uint, startTime time.Time, endTime time.Time, ownerVoterPoll sdk.AccAddress, coinsAmount sdk.Coin) MsgCreatePoll {
-	return MsgCreatePoll{
-		PollType:       pollType,
-		StartTime:      startTime,
-		EndTime:        endTime,
-		OwnerVoterPoll: ownerVoterPoll,
-		CoinsAmount:    coinsAmount,
+func NewMsgCreateVotePoll(poolType string, owner sdk.AccAddress) MsgCreateVotePoll {
+	return MsgCreateVotePoll{
+		PollType:       poolType,
+		OwnerVoterPoll: owner,
 	}
 }
-func (msg MsgCreatePoll) Route() string { return RouterKey }
-func (msg MsgCreatePoll) Type() string  { return "create_poll" }
-func (msg MsgCreatePoll) GetSigners() []sdk.AccAddress {
+func (msg MsgCreateVotePoll) Route() string { return RouterKey }
+func (msg MsgCreateVotePoll) Type() string  { return "create_vote_poll" }
+func (msg MsgCreateVotePoll) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{msg.OwnerVoterPoll}
 }
 
 // GetSignBytes gets the bytes for the message signer to sign on
-func (msg MsgCreatePoll) GetSignBytes() []byte {
+func (msg MsgCreateVotePoll) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic validity check for the AnteHandler
-func (msg MsgCreatePoll) ValidateBasic() error {
-	if !(msg.PollType > 0 && msg.PollType < 4) {
-		return sdkErrors.Wrap(sdkErrors.ErrInvalidAddress, "Invalid type of pool")
-	}
-	if msg.EndTime.Sub(msg.StartTime).Hours() < 24 {
-		return sdkErrors.Wrap(sdkErrors.New("poll creation", 234, "POll Validation"), "Time to vote is less than 24 hours")
-	}
+func (msg MsgCreateVotePoll) ValidateBasic() error {
+	//Vote must be either 0 or 1
 	return nil
 }
 

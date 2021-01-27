@@ -2,7 +2,6 @@ package relcontractors
 
 import (
 	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -15,8 +14,8 @@ func NewHandler(k Keeper) sdk.Handler {
 		// TODO: Define your msg cases
 		case MsgUpdateRelContractorAddress:
 			return handleMsgUpdateReContractorAddress(ctx, k, msg)
-		case MsgCreatePoll:
-			return handleMsgCreatePoll(ctx, k, msg)
+		case MsgCreateVotePoll:
+			return handleMsgCreateVotePoll(ctx, k, msg)
 		case MsgVotePoll:
 			return handleMsgVotePoll(ctx, k, msg)
 		case MsgProcessPoll:

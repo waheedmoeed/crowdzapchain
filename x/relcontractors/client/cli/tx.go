@@ -7,8 +7,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
-	"time"
-
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -28,39 +26,39 @@ func GetTxCmd(cdc *codec.Codec) *cobra.Command {
 	}
 
 	chainserviceTxCmd.AddCommand(flags.PostCommands(
-	 //TODO: Add tx based commands
-	 	CmdUpdateRelContractor(cdc),
-		CmdCreateNewPoll(cdc),
+		//TODO: Add tx based commands
+		CmdUpdateRelContractor(cdc),
+		//CmdCreateNewPoll(cdc),
 	)...)
 
 	return chainserviceTxCmd
 }
 
- func CmdUpdateRelContractor(cdc *codec.Codec) *cobra.Command {
- 	return &cobra.Command{
- 		Use:   "update-rel-contractor [newAddress]",
- 		Short: "add new rel contractor in contract",
- 		Args:  cobra.ExactArgs(1),
- 		RunE: func(cmd *cobra.Command, args []string) error {
- 			cliCtx := context.NewCLIContext().WithCodec(cdc)
- 			inBuf := bufio.NewReader(cmd.InOrStdin())
- 			txBldr := auth.NewTxBuilderFromCLI(inBuf).WithTxEncoder(utils.GetTxEncoder(cdc))
+func CmdUpdateRelContractor(cdc *codec.Codec) *cobra.Command {
+	return &cobra.Command{
+		Use:   "update-rel-contractor [newAddress]",
+		Short: "add new rel contractor in contract",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx := context.NewCLIContext().WithCodec(cdc)
+			inBuf := bufio.NewReader(cmd.InOrStdin())
+			txBldr := auth.NewTxBuilderFromCLI(inBuf).WithTxEncoder(utils.GetTxEncoder(cdc))
 			newAddr, err := sdk.AccAddressFromBech32(args[0])
-			if err != nil{
+			if err != nil {
 				return err
 			}
- 			msg := types.NewMsgUpdateRelContractorAddress(cliCtx.GetFromAddress(), newAddr)
- 			err = msg.ValidateBasic()
- 			if err != nil {
- 				return err
- 			}
+			msg := types.NewMsgUpdateRelContractorAddress(cliCtx.GetFromAddress(), newAddr)
+			err = msg.ValidateBasic()
+			if err != nil {
+				return err
+			}
 
- 			return utils.GenerateOrBroadcastMsgs(cliCtx, txBldr, []sdk.Msg{msg})
- 		},
- 	}
- }
+			return utils.GenerateOrBroadcastMsgs(cliCtx, txBldr, []sdk.Msg{msg})
+		},
+	}
+}
 
-func CmdCreateNewPoll(cdc *codec.Codec) *cobra.Command {
+/*func CmdCreateNewPoll(cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "create-new-poll",
 		Short: "create new poll it could be mint or distribute poll",
@@ -84,3 +82,5 @@ func CmdCreateNewPoll(cdc *codec.Codec) *cobra.Command {
 		},
 	}
 }
+
+*/

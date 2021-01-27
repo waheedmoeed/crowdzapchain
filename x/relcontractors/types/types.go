@@ -48,7 +48,7 @@ type CoinsMintedRecord struct {
 
 type VotingPoll struct {
 	PollId               string           `json:"poll_id"`
-	PollType             uint             `json:"type"`
+	PollType             string           `json:"type"`
 	StartTime            time.Time        `json:"start_time"`
 	EndTime              time.Time        `json:"end_time"`
 	PositiveVotes        uint             `json:"positive_votes"`

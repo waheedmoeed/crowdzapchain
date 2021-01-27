@@ -4,7 +4,6 @@ import (
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"math/rand"
 	"time"
 )
 
@@ -17,46 +16,11 @@ func handleMsgUpdateReContractorAddress(ctx sdk.Context, k Keeper, msg MsgUpdate
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
 
-//Create new voting poll in contract
-func handleMsgCreatePoll(ctx sdk.Context, k Keeper, msg MsgCreatePoll) (*sdk.Result, error) {
-	contract, latestPoll, err := k.GetLatestPollAndContract(ctx)
+func handleMsgCreateVotePoll(ctx sdk.Context, k Keeper, msg MsgCreateVotePoll) (*sdk.Result, error) {
+	err := k.CreatePoll(ctx, msg.PollType, msg.OwnerVoterPoll)
 	if err != nil {
-		return nil, sdkerrors.Wrap(err, "Failed to read relContract from store")
+		return nil, sdkerrors.Wrap(err, "")
 	}
-	//Check latest poll if it is still valid( end-time not reached or not processed )
-	if !(latestPoll.PollId == "") {
-		if latestPoll.EndTime.Equal(time.Now()) || !latestPoll.Processed {
-			return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("poll creation", 234, "Poll Creation"), "Already another poll is valid")
-		}
-	}
-	//generate unique ID for every voting poll
-	b := make([]byte, 22)
-	for i := 0; i < 22; i++ {
-		b[i] = byte(97 + rand.Intn(122-97))
-	}
-	//check validity of:
-	//start(must be greater than now time)
-	//end time (must be greater than 24 hour )
-	if msg.StartTime.Before(time.Now()) || msg.EndTime.Before(time.Now().Add(time.Hour*24)) {
-		return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("poll creation", 234, "Poll Creation"), "Time of poll start or end invalid")
-	}
-	poll := VotingPoll{
-		PollId:               string(b),
-		PollType:             msg.PollType,
-		StartTime:            msg.StartTime,
-		EndTime:              msg.EndTime,
-		PositiveVotes:        0,
-		NegativeVotes:        0,
-		PositiveVotesAddress: []sdk.AccAddress{},
-		NegativeVotesAddress: []sdk.AccAddress{},
-		OwnerVoterPoll:       msg.OwnerVoterPoll,
-		Processed:            false,
-		CoinsAmount:          msg.CoinsAmount,
-	}
-	newContract := append(contract.VotingPolls, poll)
-	contract.VotingPolls = newContract
-	k.Set(ctx, contract)
-	//TODO: Add events here
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
 
@@ -76,7 +40,9 @@ func handleMsgVotePoll(ctx sdk.Context, k Keeper, msg MsgVotePoll) (*sdk.Result,
 	if contractorFounded {
 		//find poll by given Id and validate is poll and voter valid to vote
 		if len(contractor.VotingPolls) > 0 {
-			for _, poll := range contractor.VotingPolls {
+			for index, poll := range contractor.VotingPolls {
+				fmt.Println(poll.PollId)
+				fmt.Println(msg.PollId)
 				if poll.PollId == msg.PollId {
 					//time check and validate that poll is not yet processed
 					if checkPollValidity(poll.StartTime, poll.EndTime) && !poll.Processed {
@@ -89,6 +55,7 @@ func handleMsgVotePoll(ctx sdk.Context, k Keeper, msg MsgVotePoll) (*sdk.Result,
 							poll.PositiveVotes = poll.PositiveVotes + 1
 							poll.PositiveVotesAddress = positiveVoters
 						}
+						contractor.VotingPolls[index] = poll
 						k.Set(ctx, contractor)
 						//TODO: Add events
 						return &sdk.Result{Events: ctx.EventManager().Events()}, nil
@@ -100,9 +67,11 @@ func handleMsgVotePoll(ctx sdk.Context, k Keeper, msg MsgVotePoll) (*sdk.Result,
 		} else {
 			return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("vote poll", 235, "POll Voting"), "there is no poll to vote")
 		}
+	} else {
+		return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("vote poll", 235, "POll Voting"), "voter is not contractor")
 	}
 	//TODO: Add events here
-	return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("vote poll", 235, "POll Voting"), "voter is not contractor")
+	return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("vote poll", 235, "POll Voting"), "failed to process")
 }
 
 func handleMsgProcessPoll(ctx sdk.Context, k Keeper, msg MsgProcessPoll) (*sdk.Result, error) {
@@ -152,9 +121,7 @@ func checkPollValidity(start time.Time, end time.Time) bool {
 	//Vote must be casted before 5 min of expiry
 	if end.Sub(now).Minutes() > 5 {
 		//Vote must be casted after 5 min of start
-		if now.Sub(start).Minutes() > 5 {
-			return true
-		}
+		return true
 	}
 	return false
 }

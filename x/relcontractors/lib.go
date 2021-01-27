@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	MINTCOIN         = 1
-	DISTRIBUTECOIN   = 2
-	ADDRELCONTRACTOR = 3
+	MINTCOIN         = "1"
+	DISTRIBUTECOIN   = "2"
+	ADDRELCONTRACTOR = "3"
 )
 
 ////TODO:::: Recover from panic state when keeper set method called

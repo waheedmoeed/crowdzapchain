@@ -3,8 +3,11 @@ package keeper
 import (
 	"errors"
 	"fmt"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/tendermint/tendermint/libs/log"
+	"math/rand"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -94,6 +97,54 @@ func (k Keeper) UpdateContractorByAddress(ctx sdk.Context, address sdk.AccAddres
 	return nil
 }
 
+func (k Keeper) CreatePoll(ctx sdk.Context, pollType string, ownerVoterPoll sdk.AccAddress) error {
+	fmt.Println("Hellllllllllllllllllloooooooooooooooo")
+	contract, err := k.Get(ctx)
+
+	fmt.Println(contract.VotingPolls)
+
+	if err != nil {
+		return sdkerrors.Wrap(sdkerrors.New("poll creation", 234, "Poll Creation"), "Failed to read relContract from store")
+	}
+	//Check latest poll if it is still valid( end-time not reached or not processed )
+
+	if len(contract.VotingPolls) != 0 {
+		index := len(contract.VotingPolls)
+		latestPoll := contract.VotingPolls[index]
+		if latestPoll.EndTime.Equal(time.Now()) || !latestPoll.Processed {
+			return sdkerrors.Wrap(sdkerrors.New("poll creation", 234, "Poll Creation"), "Already another poll is valid")
+		}
+	}
+
+	b := make([]byte, 22)
+	for i := 0; i < 22; i++ {
+		b[i] = byte(97 + rand.Intn(122-97))
+	}
+
+	//time
+	startTime := time.Now()
+	endTime := time.Now().Add(time.Hour * 24 * 2)
+	poll := types.VotingPoll{
+		PollId:               string(b),
+		PollType:             pollType,
+		StartTime:            startTime,
+		EndTime:              endTime,
+		PositiveVotes:        0,
+		NegativeVotes:        0,
+		PositiveVotesAddress: []sdk.AccAddress{},
+		NegativeVotesAddress: []sdk.AccAddress{},
+		OwnerVoterPoll:       ownerVoterPoll,
+		Processed:            false,
+		CoinsAmount:          sdk.NewCoin("rel", sdk.NewInt(100)),
+	}
+	var polls []types.VotingPoll
+	polls = append(contract.VotingPolls, poll)
+	contract.VotingPolls = polls
+	k.Set(ctx, contract)
+	fmt.Println(polls)
+	return nil
+}
+
 //Get contractor from store by matching addresses
 func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) (types.Contractor, error) {
 	contract, err := k.Get(ctx)
@@ -112,19 +163,6 @@ func (k Keeper) GetContractorByAddress(ctx sdk.Context, address sdk.AccAddress) 
 		return types.Contractor{}, errors.New("failed to find contractor with respective address")
 	}
 	return contractor, nil
-}
-
-//Get latest poll
-func (k Keeper) GetLatestPollAndContract(ctx sdk.Context) (types.RelContract, types.VotingPoll, error) {
-	contract, err := k.Get(ctx)
-	if err != nil {
-		return types.RelContract{}, types.VotingPoll{}, err
-	}
-	index := len(contract.VotingPolls)
-	if len(contract.VotingPolls) == 0 {
-		return contract, types.VotingPoll{}, nil
-	}
-	return contract, contract.VotingPolls[index], nil
 }
 
 /*
