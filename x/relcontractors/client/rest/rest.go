@@ -2,7 +2,6 @@ package rest
 
 import (
 	"fmt"
-	authrest "github.com/cosmos/cosmos-sdk/x/auth/client/rest"
 	"github.com/gorilla/mux"
 
 	"github.com/cosmos/cosmos-sdk/client/context"
@@ -20,8 +19,6 @@ func RegisterRoutes(cliCtx context.CLIContext, r *mux.Router, moduleName string)
 }
 
 func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router, moduleName string) {
-	//to broadcast transactions to chain through the REST points.
-	r.HandleFunc("/broadcastTransaction", authrest.BroadcastTxRequest(cliCtx)).Methods("POST")
 	//REST transactions endpoints for this module
 	r.HandleFunc(fmt.Sprintf("/%s/updateRelContractor", moduleName), updateRelContractorAddressHandler(cliCtx)).Methods("POST")
 	r.HandleFunc(fmt.Sprintf("/%s/createVotePoll", moduleName), createPollHandler(cliCtx)).Methods("POST")

@@ -6,14 +6,11 @@ import (
 )
 
 const (
-	// TODO: define constants that you would like exposed from your module
-
-	ModuleName        = types.ModuleName
-	RouterKey         = types.RouterKey
-	StoreKey          = types.StoreKey
-	DefaultParamspace = types.DefaultParamspace
-	QueryParams       = types.QueryParams
-	QuerierRoute      = types.QuerierRoute
+	ModuleName   = types.ModuleName
+	RouterKey    = types.RouterKey
+	StoreKey     = types.StoreKey
+	StoreKeyB    = types.StoreKeyB
+	QuerierRoute = types.QuerierRoute
 )
 
 var (
@@ -36,5 +33,13 @@ type (
 	GenesisState = types.GenesisState
 	Params       = types.Params
 
-	// TODO: Fill out module types
+	//Custom MSG Types
+	MsgCreateBasicContract = types.MsgCreateBasicContract
+
+	//Contract types
+	Contract            = types.Contract
+	BasicDetail         = types.BasicDetail
+	InvestmentRecord    = types.InvestmentRecord
+	TokenTransferRecord = types.TokenTransferRecord
+	BasicContract       = types.BasicContract
 )

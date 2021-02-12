@@ -97,7 +97,7 @@ func (k Keeper) UpdateContractorByAddress(ctx sdk.Context, address sdk.AccAddres
 	return nil
 }
 
-func (k Keeper) CreatePoll(ctx sdk.Context, pollType string, ownerVoterPoll sdk.AccAddress) error {
+func (k Keeper) CreatePoll(ctx sdk.Context, pollType string, amount uint, ownerVoterPoll sdk.AccAddress) error {
 	fmt.Println("Hellllllllllllllllllloooooooooooooooo")
 	contract, err := k.Get(ctx)
 
@@ -135,8 +135,9 @@ func (k Keeper) CreatePoll(ctx sdk.Context, pollType string, ownerVoterPoll sdk.
 		NegativeVotesAddress: []sdk.AccAddress{},
 		OwnerVoterPoll:       ownerVoterPoll,
 		Processed:            false,
-		CoinsAmount:          sdk.NewCoin("rel", sdk.NewInt(100)),
+		CoinsAmount:          sdk.NewCoin("rel", sdk.NewInt(int64(amount))),
 	}
+
 	var polls []types.VotingPoll
 	polls = append(contract.VotingPolls, poll)
 	contract.VotingPolls = polls

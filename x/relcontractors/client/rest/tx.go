@@ -70,7 +70,7 @@ func createPollHandler(cliCtx context.CLIContext) http.HandlerFunc {
 
 		// TODO: Define the module tx logic for this action
 		// create the message
-		msg := types.NewMsgCreateVotePoll(req.PollType, req.OwnerVoterPoll)
+		msg := types.NewMsgCreateVotePoll(req.PollType, req.Amount, req.OwnerVoterPoll)
 		err := msg.ValidateBasic()
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())

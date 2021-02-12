@@ -137,7 +137,7 @@ func votingPollsString(poll []VotingPoll) string {
 	votingPolls := ""
 	for _, value := range poll {
 		votingPolls = votingPolls + fmt.Sprintf(`
-			PollType: %d
+			PollType: %s
 			StartTime: %s
 			EndTime: %s
 			PositiveVotes: %d

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type BasicContract struct {
+type Contract struct {
 	//to keep track of total coins and distributed coins among contractors.
 	BasicDetail BasicDetail        `json:"basic_detail"`
 	Registry    []InvestmentRecord `json:"registry"`
@@ -30,6 +30,21 @@ type InvestmentRecord struct {
 type TokenTransferRecord struct {
 	From         sdk.AccAddress `json:"transfer_from"`
 	TransferDate time.Time      `json:"transfer_date"`
+}
+
+/**************/
+/**************/
+
+type BasicContract struct {
+	Address  string   `json:"contract_address"`
+	Contract Contract `json:"basic_contract"`
+	//TODO :: define other attributes for this contract
+}
+
+type YieldContract struct {
+	Address  string   `json:"contract_address"`
+	Contract Contract `json:"basic_contract"`
+	//TODO :: define other attributes for this contract
 }
 
 ///////////Transaction method

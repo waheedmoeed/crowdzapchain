@@ -2,25 +2,27 @@ package types
 
 // GenesisState - all smartcontracts state that must be provided at genesis
 type GenesisState struct {
-	// TODO: Fill out what is needed by the module for genesis
+	BasicContracts []BasicContract `json:"basic_contracts"`
+	YieldContracts []YieldContract `json:"yield_contracts"`
 }
 
 // NewGenesisState creates a new GenesisState object
-func NewGenesisState( /* TODO: Fill out with what is needed for genesis state */ ) GenesisState {
+func NewGenesisState() GenesisState {
 	return GenesisState{
-		// TODO: Fill out according to your genesis state
+		BasicContracts: nil,
+		YieldContracts: nil,
 	}
 }
 
 // DefaultGenesisState - default GenesisState used by Cosmos Hub
 func DefaultGenesisState() GenesisState {
 	return GenesisState{
-		// TODO: Fill out according to your genesis state, these values will be initialized but empty
+		BasicContracts: nil,
+		YieldContracts: nil,
 	}
 }
 
 // ValidateGenesis validates the smartcontracts genesis parameters
 func ValidateGenesis(data GenesisState) error {
-	// TODO: Create a sanity check to make sure the state conforms to the modules needs
 	return nil
 }

@@ -15,6 +15,7 @@ type MsgUpdateRelContractorAddress struct {
 
 type MsgCreateVotePoll struct {
 	PollType       string         `json:"poll_type"`
+	Amount         uint           `json:"amount"`
 	OwnerVoterPoll sdk.AccAddress `json:"owner_voter_poll"`
 }
 

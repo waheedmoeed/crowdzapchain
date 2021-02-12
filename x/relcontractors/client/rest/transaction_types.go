@@ -15,7 +15,7 @@ type CreatePollReq struct {
 	BaseReq        rest.BaseReq   `json:"base_req"`
 	PollType       string         `json:"poll_type"`
 	OwnerVoterPoll sdk.AccAddress `json:"owner_voter_poll"`
-	//Amount         string 			`json:"amount"`
+	Amount         uint           `json:"amount"`
 }
 
 type VotePollReq struct {

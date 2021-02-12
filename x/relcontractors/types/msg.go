@@ -37,9 +37,10 @@ func (msg MsgUpdateRelContractorAddress) ValidateBasic() error {
 
 
  */
-func NewMsgCreateVotePoll(poolType string, owner sdk.AccAddress) MsgCreateVotePoll {
+func NewMsgCreateVotePoll(poolType string, amount uint, owner sdk.AccAddress) MsgCreateVotePoll {
 	return MsgCreateVotePoll{
 		PollType:       poolType,
+		Amount:         amount,
 		OwnerVoterPoll: owner,
 	}
 }

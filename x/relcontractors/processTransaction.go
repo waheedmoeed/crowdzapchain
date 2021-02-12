@@ -17,7 +17,7 @@ func handleMsgUpdateReContractorAddress(ctx sdk.Context, k Keeper, msg MsgUpdate
 }
 
 func handleMsgCreateVotePoll(ctx sdk.Context, k Keeper, msg MsgCreateVotePoll) (*sdk.Result, error) {
-	err := k.CreatePoll(ctx, msg.PollType, msg.OwnerVoterPoll)
+	err := k.CreatePoll(ctx, msg.PollType, msg.Amount, msg.OwnerVoterPoll)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "")
 	}

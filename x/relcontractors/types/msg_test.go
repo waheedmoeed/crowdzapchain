@@ -4,6 +4,7 @@ import (
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/tendermint/crypto/secp256k1"
 	"testing"
 	"time"
 )
@@ -21,5 +22,13 @@ func TestTime(t *testing.T) {
 	fmt.Println(fg)
 	endTime := time.Now().Add(time.Hour * 24 * 2)
 	fmt.Println(endTime)
+	require.Equal(t, true, true)
+}
+
+func TestGenerateNewAddress(t *testing.T) {
+	key := secp256k1.GenPrivKey()
+	pub := key.PubKey()
+	addr := sdk.AccAddress(pub.Address())
+	fmt.Println(addr.String())
 	require.Equal(t, true, true)
 }
