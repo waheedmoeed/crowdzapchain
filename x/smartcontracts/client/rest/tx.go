@@ -25,7 +25,7 @@ func CreateBasicContractHandler(cliCtx context.CLIContext) http.HandlerFunc {
 
 		// TODO: Define the module tx logic for this action
 		// create the message
-		msg := types.NewMsgCreateBasicContract(req.Creator, req.Title, req.TotalSupply, req.TokenPrice, req.StartTime, req.EndTime)
+		msg := types.NewMsgCreateBasicContract(req.ContractAddress, req.Creator, req.Title, req.TotalSupply, req.TokenPrice, req.StartTime, req.EndTime)
 		err := msg.ValidateBasic()
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
