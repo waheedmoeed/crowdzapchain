@@ -8,6 +8,7 @@ import (
 func RegisterCodec(cdc *codec.Codec) {
 	// TODO: Register the modules msgs
 	cdc.RegisterConcrete(MsgCreateBasicContract{}, "smartcontracts/create_basic_contract", nil)
+	cdc.RegisterConcrete(MsgCreateYieldContract{}, "smartcontracts/create_yield_contract", nil)
 }
 
 // ModuleCdc defines the module codec

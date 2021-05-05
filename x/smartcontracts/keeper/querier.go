@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"fmt"
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -10,7 +11,8 @@ import (
 )
 
 const (
-	QueryBasicContract = "basic_contract"
+	QueryBasicContract = "get_basic_contract"
+	QueryYieldContract = "get_yield_contract"
 )
 
 // NewQuerier creates a new querier for smartcontracts clients.
@@ -19,6 +21,8 @@ func NewQuerier(k Keeper) sdk.Querier {
 		switch path[0] {
 		case QueryBasicContract:
 			return queryBasicContract(ctx, k, path[1:])
+		case QueryYieldContract:
+			return queryYieldContract(ctx, k, path[1:])
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "unknown smartcontracts query endpoint")
 		}
@@ -27,6 +31,20 @@ func NewQuerier(k Keeper) sdk.Querier {
 
 func queryBasicContract(ctx sdk.Context, k Keeper, paths []string) ([]byte, error) {
 	contract, err := k.GetBasicContract(ctx, paths[0])
+	if err != nil || contract.Contract.BasicDetail.Title == "" {
+		return nil, sdkerrors.Wrap(err, "failed to get contract")
+	}
+	res, err := codec.MarshalJSONIndent(types.ModuleCdc, contract)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, fmt.Sprintf("Failed to get contract for address %s", paths[0]))
+	}
+
+	return res, nil
+}
+
+func queryYieldContract(ctx sdk.Context, k Keeper, paths []string) ([]byte, error) {
+	contract, err := k.GetYieldContract(
+		ctx, paths[0])
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "failed to get contract")
 	}
@@ -37,6 +55,3 @@ func queryBasicContract(ctx sdk.Context, k Keeper, paths []string) ([]byte, erro
 
 	return res, nil
 }
-
-// TODO: Add the modules query functions
-// They will be similar to the above one: queryParams()

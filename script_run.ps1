@@ -1,6 +1,6 @@
 ﻿#Write-Host "removing previous state"
-#Remove-Item c:/.appd
-#Remove-Item c:/.appli
+#rm  ~/.nsd
+#rm  ~/.nscli
 
 Write-Host "creating default configuration for chain"
 

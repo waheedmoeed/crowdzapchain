@@ -41,3 +41,43 @@ func (msg MsgCreateBasicContract) ValidateBasic() error {
 	}
 	return nil
 }
+
+
+
+
+
+func NewMsgCreateYieldContract(Creator sdk.AccAddress, Title string, TotalSupply uint, TokenPrice uint, StartDate time.Time, EndDate time.Time) MsgCreateBasicContract {
+	return MsgCreateBasicContract{
+		Creator:     Creator,
+		Title:       Title,
+		StartTime:   StartDate,
+		EndTime:     EndDate,
+		TotalSupply: TotalSupply,
+		TokenPrice:  TokenPrice,
+	}
+}
+
+// nolint
+func (msg MsgCreateYieldContract) Route() string { return RouterKey }
+
+func (msg MsgCreateYieldContract) Type() string {
+	return "create_basic_contract"
+}
+
+func (msg MsgCreateYieldContract) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{sdk.AccAddress(msg.Creator)}
+}
+
+// GetSignBytes gets the bytes for the message signer to sign on
+func (msg MsgCreateYieldContract) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic validity check for the AnteHandler
+func (msg MsgCreateYieldContract) ValidateBasic() error {
+	if msg.Creator.Empty() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "missing creator address")
+	}
+	return nil
+}

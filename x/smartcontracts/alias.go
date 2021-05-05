@@ -35,6 +35,7 @@ type (
 
 	//Custom MSG Types
 	MsgCreateBasicContract = types.MsgCreateBasicContract
+	MsgCreateYieldContract = types.MsgCreateYieldContract
 
 	//Contract types
 	Contract            = types.Contract
@@ -42,4 +43,5 @@ type (
 	InvestmentRecord    = types.InvestmentRecord
 	TokenTransferRecord = types.TokenTransferRecord
 	BasicContract       = types.BasicContract
+	YieldContract       = types.YieldContract
 )

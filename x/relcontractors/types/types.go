@@ -60,7 +60,6 @@ type VotingPoll struct {
 	CoinsAmount          sdk.Coin         `json:"coins_amount"`
 }
 
-// NewWhois returns a new Whois with the  as the price
 func NewRelContract() RelContract {
 	return RelContract{}
 }
@@ -92,7 +91,7 @@ func coinsMintedRecordString(records []CoinsMintedRecord) string {
 			Contractrors_Positive: %s`,
 			value.Coins.String(),
 			value.Date,
-			addressesString(value.VoterContractor, "Positive_Voter"),
+			addressesString(value.VoterContractor),
 		)
 	}
 	return coinsMintedRecord
@@ -127,7 +126,7 @@ func relContractorString(contracters []Contractor) string {
 					OtherAdressess: %s`,
 			value.ContractorAddress.String(),
 			value.Name,
-			addressesString(value.OtherAddresses, "Other_Address"),
+			addressesString(value.OtherAddresses),
 		)
 	}
 	return strings.TrimSpace(relContractors)
@@ -150,8 +149,8 @@ func votingPollsString(poll []VotingPoll) string {
 			value.EndTime,
 			value.PositiveVotes,
 			value.NegativeVotes,
-			addressesString(value.PositiveVotesAddress, "Positive Voters"),
-			addressesString(value.NegativeVotesAddress, "Negative Voters"),
+			addressesString(value.PositiveVotesAddress),
+			addressesString(value.NegativeVotesAddress),
 			value.OwnerVoterPoll.String(),
 		)
 	}
@@ -159,10 +158,10 @@ func votingPollsString(poll []VotingPoll) string {
 }
 
 //to stringify addresses
-func addressesString(addresses []sdk.AccAddress, tag string) string {
+func addressesString(addresses []sdk.AccAddress) string {
 	addressesString := ""
-	for index, address := range addresses {
-		addressesString = addressesString + fmt.Sprintf("%d %s: %s", index, tag, address.String())
+	for _, address := range addresses {
+		addressesString = addressesString + fmt.Sprintf("%s", address.String())
 	}
 	return addressesString
 }

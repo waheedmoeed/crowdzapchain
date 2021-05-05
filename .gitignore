@@ -1,6 +1,8 @@
 vendor
 appcli.exe
 appd.exe
+/cmd/appcli/lixappcli
+/cmd/appd/lixappd
 init.sh
 keys
 steps
