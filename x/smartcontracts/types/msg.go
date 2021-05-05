@@ -6,14 +6,15 @@ import (
 	"time"
 )
 
-func NewMsgCreateBasicContract(Creator sdk.AccAddress, Title string, TotalSupply uint, TokenPrice uint, StartDate time.Time, EndDate time.Time) MsgCreateBasicContract {
+func NewMsgCreateBasicContract(ContractAddress sdk.AccAddress, Creator sdk.AccAddress, Title string, TotalSupply uint, TokenPrice uint, StartDate time.Time, EndDate time.Time) MsgCreateBasicContract {
 	return MsgCreateBasicContract{
-		Creator:     Creator,
-		Title:       Title,
-		StartTime:   StartDate,
-		EndTime:     EndDate,
-		TotalSupply: TotalSupply,
-		TokenPrice:  TokenPrice,
+		ContractAddress: ContractAddress,
+		Creator:         Creator,
+		Title:           Title,
+		StartTime:       StartDate,
+		EndTime:         EndDate,
+		TotalSupply:     TotalSupply,
+		TokenPrice:      TokenPrice,
 	}
 }
 

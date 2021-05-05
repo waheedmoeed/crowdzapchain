@@ -1,7 +1,13 @@
 ﻿#Write-Host "removing previous state"
+<<<<<<< HEAD
 #rm  ~/.nsd
 #rm  ~/.nscli
 
+=======
+#Remove-Item c:/.appd
+#Remove-Item c:/.appli
+Set-Location  .\GolandProjects\crowdzapchain
+>>>>>>> b16dcb6f9d59c8304e305186a71fa966f3e51e09
 Write-Host "creating default configuration for chain"
 
 #change dir where built app located
@@ -69,7 +75,7 @@ $nadeemAddress = 'cosmos18x9my7vst6svm65sug8cjt2h060j5nd9mkdj3p'
 #####
 #####
 
-$pathToJsonContract = "C:\Users\wahee\OneDrive\Desktop\relchain\contract_temp.json"
+$pathToJsonContract = "C:\Users\Afaq Malik\GolandProjects\crowdzapchain\contract_temp.json"
 $contract = Get-Content $pathToJsonContract -raw | ConvertFrom-Json
 
 $contract.rel_contract.rel_contractors[0].contractor_address = $abdulAddress
