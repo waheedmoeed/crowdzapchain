@@ -1,12 +1,13 @@
 package types
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"time"
 )
 
-func NewMsgCreateBasicContract(ContractAddress sdk.AccAddress, Creator sdk.AccAddress, Title string, TotalSupply uint, TokenPrice uint, StartDate time.Time, EndDate time.Time) MsgCreateBasicContract {
+func NewMsgCreateBasicContract(ContractAddress sdk.AccAddress, Creator sdk.AccAddress, Title string, TotalSupply, TokenPrice uint, StartDate, EndDate time.Time) MsgCreateBasicContract {
 	return MsgCreateBasicContract{
 		ContractAddress: ContractAddress,
 		Creator:         Creator,
@@ -42,10 +43,6 @@ func (msg MsgCreateBasicContract) ValidateBasic() error {
 	}
 	return nil
 }
-
-
-
-
 
 func NewMsgCreateYieldContract(Creator sdk.AccAddress, Title string, TotalSupply uint, TokenPrice uint, StartDate time.Time, EndDate time.Time) MsgCreateBasicContract {
 	return MsgCreateBasicContract{

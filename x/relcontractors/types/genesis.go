@@ -67,9 +67,11 @@ func ValidateGenesis(data GenesisState) error {
 	if data.RelContract.MintedCoinsRecord != nil {
 		return fmt.Errorf("invalid RelContractors:. Error:Minted Coins record must be empty")
 	}
+	/*
 	if data.RelContract.VotingPolls != nil {
 		return fmt.Errorf("invalid RelContractors:. Error:Voting Polls record must be empty")
 	}
+	*/
 	return nil
 }
 

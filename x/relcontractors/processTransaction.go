@@ -2,9 +2,10 @@ package relcontractors
 
 import (
 	"fmt"
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"time"
 )
 
 //change contractor address with new provided address and add old one to other addresses
@@ -41,8 +42,6 @@ func handleMsgVotePoll(ctx sdk.Context, k Keeper, msg MsgVotePoll) (*sdk.Result,
 		//find poll by given Id and validate is poll and voter valid to vote
 		if len(contractor.VotingPolls) > 0 {
 			for index, poll := range contractor.VotingPolls {
-				fmt.Println(poll.PollId)
-				fmt.Println(msg.PollId)
 				if poll.PollId == msg.PollId {
 					//time check and validate that poll is not yet processed
 					if checkPollValidity(poll.StartTime, poll.EndTime) && !poll.Processed {
@@ -88,14 +87,16 @@ func handleMsgProcessPoll(ctx sdk.Context, k Keeper, msg MsgProcessPoll) (*sdk.R
 	}
 	if contractorFounded {
 		if len(contract.VotingPolls) > 0 {
-			for _, poll := range contract.VotingPolls {
+			for index, poll := range contract.VotingPolls {
 				if poll.PollId == msg.PollId {
 					//check if all contractor voted or time ended and check this poll not yet processed
 					if checkVotesProcess(contract, poll) && !poll.Processed {
+						contract.VotingPolls[index].Processed = true
 						error := processPoll(poll, contract, ctx, k)
 						if error != nil {
 							return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("process poll", 236, "Process Poll"), fmt.Sprintf("Failed to process poll %s %s", poll.PollId, error))
 						}
+
 						return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 					} else {
 						return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("process poll", 236, "Process Poll"), "cannot process this poll, to process it all contractors must vote or it reaches its expiry time")
@@ -130,7 +131,7 @@ func checkVotesProcess(contractor RelContract, poll VotingPoll) bool {
 	//check if all the contractor have voted yet or not
 	numContractors := len(contractor.RelContractors)
 	totalVotes := int(poll.PositiveVotes + poll.NegativeVotes)
-	if numContractors == totalVotes {
+	if numContractors <= totalVotes {
 		return true
 	}
 	//check if end time of poll has reached or not

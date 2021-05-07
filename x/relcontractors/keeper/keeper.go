@@ -3,11 +3,12 @@ package keeper
 import (
 	"errors"
 	"fmt"
+	"math/rand"
+	"time"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/tendermint/tendermint/libs/log"
-	"math/rand"
-	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -98,7 +99,6 @@ func (k Keeper) UpdateContractorByAddress(ctx sdk.Context, address sdk.AccAddres
 }
 
 func (k Keeper) CreatePoll(ctx sdk.Context, pollType string, amount uint, ownerVoterPoll sdk.AccAddress) error {
-	fmt.Println("Hellllllllllllllllllloooooooooooooooo")
 	contract, err := k.Get(ctx)
 
 	fmt.Println(contract.VotingPolls)
@@ -106,15 +106,7 @@ func (k Keeper) CreatePoll(ctx sdk.Context, pollType string, amount uint, ownerV
 	if err != nil {
 		return sdkerrors.Wrap(sdkerrors.New("poll creation", 234, "Poll Creation"), "Failed to read relContract from store")
 	}
-	//Check latest poll if it is still valid( end-time not reached or not processed )
-
-	if len(contract.VotingPolls) != 0 {
-		index := len(contract.VotingPolls)
-		latestPoll := contract.VotingPolls[index]
-		if latestPoll.EndTime.Equal(time.Now()) || !latestPoll.Processed {
-			return sdkerrors.Wrap(sdkerrors.New("poll creation", 234, "Poll Creation"), "Already another poll is valid")
-		}
-	}
+	//Check latest poll if it is still valid( end-time not reached or not processed
 
 	b := make([]byte, 22)
 	for i := 0; i < 22; i++ {
@@ -123,7 +115,7 @@ func (k Keeper) CreatePoll(ctx sdk.Context, pollType string, amount uint, ownerV
 
 	//time
 	startTime := time.Now()
-	endTime := time.Now().Add(time.Hour * 24 * 2)
+	endTime := time.Now().Add(time.Hour * 24 * 30)
 	poll := types.VotingPoll{
 		PollId:               string(b),
 		PollType:             pollType,
@@ -142,7 +134,6 @@ func (k Keeper) CreatePoll(ctx sdk.Context, pollType string, amount uint, ownerV
 	polls = append(contract.VotingPolls, poll)
 	contract.VotingPolls = polls
 	k.Set(ctx, contract)
-	fmt.Println(polls)
 	return nil
 }
 
@@ -176,8 +167,9 @@ func (k Keeper) SendCoinsToContractor(ctx sdk.Context, address sdk.AccAddress, a
 	account := k.authKeeper.GetAccount(ctx, address)
 	if account == nil {
 		newAccount := k.authKeeper.NewAccountWithAddress(ctx, address)
+		fmt.Println(newAccount.GetCoins())
 		if newAccount == nil {
-			errors.New("failed to create new account with given address")
+			return errors.New("failed to create new account with given address")
 		}
 	}
 	coins := []sdk.Coin{amount}

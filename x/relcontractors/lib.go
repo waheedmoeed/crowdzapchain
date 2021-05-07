@@ -2,9 +2,10 @@ package relcontractors
 
 import (
 	"errors"
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"time"
 )
 
 const (
@@ -24,16 +25,17 @@ func processPoll(poll VotingPoll, contract RelContract, ctx sdk.Context, k Keepe
 		break
 	case DISTRIBUTECOIN:
 		//Check if there are enough coins to distribute to contractor
-		if (contract.MintedCoins.Amount.Int64() - contract.DistributedCoins.Amount.Int64()) > poll.CoinsAmount.Amount.Int64() {
+		if (contract.MintedCoins.Amount.Int64() - contract.DistributedCoins.Amount.Int64()) < poll.CoinsAmount.Amount.Int64() {
 			err = errors.New("new Coins needed to be minted to distribute coins among nodes")
 			break
 		}
 		//Add coins into poll_owner/contractor
 		err = k.SendCoinsToContractor(ctx, poll.OwnerVoterPoll, poll.CoinsAmount)
 		if err != nil {
-			break
+			return err
 		}
 		processDistributionPoll(poll, &contract)
+		k.Set(ctx, contract)
 		break
 	case ADDRELCONTRACTOR:
 		err = processAddRelContractor(poll, ctx, k)

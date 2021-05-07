@@ -1,8 +1,9 @@
 package smartcontracts
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"time"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 /*************************/
@@ -23,14 +24,12 @@ func CreateBasicContract(ctx sdk.Context, contract MsgCreateBasicContract) (Basi
 			Registry: []InvestmentRecord{},
 		},
 	}
-	return key, basicContract, nil
+	return basicContract, nil
 }
 
-
-func CreateYieldContract(ctx sdk.Context, contract MsgCreateYieldContract) (string, YieldContract, error) {
-	key := generateNewAddress()
+func CreateYieldContract(ctx sdk.Context, contract MsgCreateYieldContract) (YieldContract, error) {
 	basicContract := YieldContract{
-		Address: key,
+		Address: "",
 		Contract: Contract{
 			BasicDetail: BasicDetail{
 				Title:       contract.Title,

@@ -1,12 +1,13 @@
 package rest
 
 import (
+	"net/http"
+
 	"github.com/cosmos/cosmos-sdk/client/context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	"github.com/waheedmoeed/relchain/x/smartcontracts/types"
-	"net/http"
 )
 
 func CreateBasicContractHandler(cliCtx context.CLIContext) http.HandlerFunc {
