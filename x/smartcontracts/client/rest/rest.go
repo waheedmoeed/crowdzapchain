@@ -2,6 +2,7 @@ package rest
 
 import (
 	"fmt"
+
 	"github.com/gorilla/mux"
 
 	"github.com/cosmos/cosmos-sdk/client/context"
@@ -22,6 +23,8 @@ func registerTxRoutes(cliCtx context.CLIContext, r *mux.Router, moduleName strin
 	//to broadcast transactions to chain through the REST points.
 	r.HandleFunc(fmt.Sprintf("/%s/createBasicContract", moduleName), CreateBasicContractHandler(cliCtx)).Methods("POST")
 	r.HandleFunc(fmt.Sprintf("/%s/createYieldContract", moduleName), CreateYieldContractHandler(cliCtx)).Methods("POST")
+	//TODO
+	//Create  POST request for ivestment
 	//REST transactions endpoints for this module
 
 }

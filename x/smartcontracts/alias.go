@@ -36,6 +36,7 @@ type (
 	//Custom MSG Types
 	MsgCreateBasicContract = types.MsgCreateBasicContract
 	MsgCreateYieldContract = types.MsgCreateYieldContract
+	MsgInvestBasicContract = types.MsgInvestBasicContract
 
 	//Contract types
 	Contract            = types.Contract

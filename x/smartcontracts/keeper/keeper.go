@@ -1,7 +1,9 @@
 package keeper
 
 import (
+	"errors"
 	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -119,6 +121,31 @@ func (k Keeper) SetYieldContract(ctx sdk.Context, key string, contract types.Yie
 	store := ctx.KVStore(k.storeKeyB)
 	bz := k.cdc.MustMarshalBinaryLengthPrefixed(contract)
 	store.Set([]byte(key), bz)
+}
+
+//CheckRequiredBalance validate that there are enough balance available to invest
+func (k Keeper) CheckRequiredBalance(ctx sdk.Context, address sdk.AccAddress, amount uint) (bool, error) {
+	account := k.authKeeper.GetAccount(ctx, address)
+	if account != nil {
+		res := account.GetCoins().AmountOf("rel").GTE(sdk.NewInt(int64(amount)))
+		return res, nil
+	}
+	return false, errors.New("failed to get account with given address")
+}
+
+//DeductCoins transfer coins from account to another
+func (k Keeper) DeductCoins(ctx sdk.Context, contractAddress, investorAddress sdk.AccAddress, amount uint) error {
+	account := k.authKeeper.GetAccount(ctx, investorAddress)
+	if account != nil {
+		coin := sdk.Coin{
+			Denom:  "rel",
+			Amount: sdk.NewInt(int64(amount)),
+		}
+		coins := []sdk.Coin{coin}
+		err := k.bankKeeper.SendCoins(ctx, investorAddress, contractAddress, coins)
+		return err
+	}
+	return errors.New("failed to get account with given address")
 }
 
 /*************************/

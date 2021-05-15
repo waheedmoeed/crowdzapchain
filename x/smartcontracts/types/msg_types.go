@@ -1,8 +1,9 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"time"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type MsgCreateBasicContract struct {
@@ -22,4 +23,10 @@ type MsgCreateYieldContract struct {
 	TotalSupply uint           `json:"total_supply"`
 	TokenPrice  uint           `json:"token_price"`
 	Creator     sdk.AccAddress `json:"creator"`
+}
+
+type MsgInvestBasicContract struct {
+	ContractAddress sdk.AccAddress `json:"contract_address"`
+	Amount          uint           `json:"amount"`
+	Investor        sdk.AccAddress `json:"investor"`
 }

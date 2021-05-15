@@ -2,7 +2,8 @@
 #rm  ~/.nsd
 #rm  ~/.nscli
 
-Invoke-RestMethod “http://localhost:5000/api/ivestment/reset”
+Write-Host "resetting investments in DB"
+Invoke-RestMethod “http://localhost:5000/api/investment/reset”
 Write-Host "creating default configuration for chain"
 
 #change dir where built app located
@@ -88,6 +89,7 @@ $contract.rel_contract.distributed_coins_logs[2].contractor_address = $nadeemAdd
 #####
 
 $a.app_state.relcontractors.rel_contract = $contract.rel_contract
+$a.app_state.smartcontracts.basic_contracts = $contract.basic_contracts
 
 $a | ConvertTo-Json -Depth 32 | Set-Content $pathToJsonGenesis
 Write-Host "Validating genesis file..."

@@ -108,5 +108,24 @@
         }
       }
     ]
-  }
+  },
+  "basic_contracts":[
+    {
+      "contract_address": "cosmos18trlzjp04flp4u3yugxeqwymxw878wry66dvu7",
+      "basic_contract": {
+        "basic_detail": {
+          "title": "ISLAMABAD CENTER",
+          "total_supply": "1000",
+          "sold_token": "0",
+          "token_price": {
+            "denom": "rel",
+            "amount": "20"
+          },
+          "start_date": "2021-05-08T09:53:37.1698532Z",
+          "ending_date": "2021-05-10T09:53:37.1698532Z"
+        },
+        "registry": null
+      }
+    }
+  ]
 }
