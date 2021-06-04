@@ -18,6 +18,8 @@ func NewHandler(k Keeper) sdk.Handler {
 			return handleMsgCreateYieldContract(ctx, k, msg)
 		case MsgInvestBasicContract:
 			return handleMsgInvestBasicContract(ctx, k, msg)
+		case MsgTransferBasicContract:
+			return handleMsgTransferBasicContract(ctx, k, msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)

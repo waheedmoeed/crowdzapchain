@@ -4,6 +4,7 @@
 
 Write-Host "resetting investments in DB"
 Invoke-RestMethod “http://localhost:5000/api/investment/reset”
+
 Write-Host "creating default configuration for chain"
 
 #change dir where built app located
@@ -38,7 +39,7 @@ Write-Host "adding abdulvalidator account to genesis state"
 
 Write-Host "adding contract account to genesis state"
 .\appd.exe add-genesis-account cosmos1ss4h432u3ltnf624kaj9k4ackukhzazntm2ryr 1000rel
-.\appd.exe add-genesis-account cosmos167n2fd2qwzazthe8gpccv3ewj3f03kz3hw3ncr 1000rel
+.\appd.exe add-genesis-account cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq 1000rel
 .\appd.exe add-genesis-account cosmos18x9my7vst6svm65sug8cjt2h060j5nd9mkdj3p 1000rel
 
 Write-Host "creating keyring store..."
@@ -64,7 +65,7 @@ $a = Get-Content $pathToJsonGenesis -raw | ConvertFrom-Json
 #$haroonAddress = $a.app_state.auth.accounts.Get(1).value.address
 #$waheedTestAddress = $a.app_state.auth.accounts.Get(1).value.address
 $abdulAddress = 'cosmos1ss4h432u3ltnf624kaj9k4ackukhzazntm2ryr'
-$haroonAddress = 'cosmos167n2fd2qwzazthe8gpccv3ewj3f03kz3hw3ncr'
+$haroonAddress = 'cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq'
 $nadeemAddress = 'cosmos18x9my7vst6svm65sug8cjt2h060j5nd9mkdj3p'
 #Write-Host "$du"
 
@@ -97,3 +98,5 @@ Write-Host "Validating genesis file..."
 Write-Host "Start chain server and rest server"
 #appd start
 #appcli rest-server --chain-id crowdzap --trust-node
+Write-Host "populating investments in DB"
+Invoke-RestMethod “http://localhost:5000/api/investment/populateDB"

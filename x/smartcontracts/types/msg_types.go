@@ -25,8 +25,17 @@ type MsgCreateYieldContract struct {
 	Creator     sdk.AccAddress `json:"creator"`
 }
 
+//MsgInvestBasicContract buy basic tokens from contract
 type MsgInvestBasicContract struct {
 	ContractAddress sdk.AccAddress `json:"contract_address"`
 	Amount          uint           `json:"amount"`
 	Investor        sdk.AccAddress `json:"investor"`
+}
+
+//MsgTransferBasicContract transafer all tokens from investor address to specific address
+type MsgTransferBasicContract struct {
+	ContractAddress sdk.AccAddress `json:"contract_address"`
+	Amount          uint           `json:"amount"`
+	From            sdk.AccAddress `json:"from"`
+	To              sdk.AccAddress `json:"to"`
 }

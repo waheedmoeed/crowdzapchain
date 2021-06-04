@@ -68,3 +68,36 @@ func handleMsgInvestBasicContract(ctx sdk.Context, k Keeper, msg MsgInvestBasicC
 	}
 
 }
+
+func handleMsgTransferBasicContract(ctx sdk.Context, k Keeper, msg MsgTransferBasicContract) (*sdk.Result, error) {
+	basicContract, err := k.GetBasicContract(ctx, msg.ContractAddress.String())
+	if err != nil {
+		return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("invest basic contract", 235, "Invest Basic"), "cannot transfer in basic, failed to get basic contract")
+	}
+
+	haveTokens, foundedIndex, err := HaveTokens(ctx, msg.From, msg.Amount, basicContract)
+	if err != nil {
+		return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("transfer basic contract", 235, "Transfer Basic"), "not enough tokens to transfer error occur")
+	}
+
+	if haveTokens {
+
+		investmentRecord := InvestmentRecord{
+			InvestorAddress: msg.To,
+			OwnedTokens:     msg.Amount,
+			InvestedDate:    basicContract.Contract.Registry[foundedIndex].InvestedDate,
+			LatestTransfer: TokenTransferRecord{
+				From:         msg.From,
+				TransferDate: time.Now(),
+			},
+		}
+
+		basicContract.Contract.Registry[foundedIndex] = investmentRecord
+		//TODO: Add events
+		k.SetBasicContract(ctx, msg.ContractAddress.String(), basicContract)
+		return &sdk.Result{Events: ctx.EventManager().Events()}, nil
+	} else {
+		return &sdk.Result{}, sdkerrors.Wrap(sdkerrors.New("invest basic contract", 235, "Invest Basic"), "not enough tokens to transfer")
+	}
+
+}

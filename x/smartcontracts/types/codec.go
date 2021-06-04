@@ -10,6 +10,7 @@ func RegisterCodec(cdc *codec.Codec) {
 	cdc.RegisterConcrete(MsgCreateBasicContract{}, "smartcontracts/create_basic_contract", nil)
 	cdc.RegisterConcrete(MsgCreateYieldContract{}, "smartcontracts/create_yield_contract", nil)
 	cdc.RegisterConcrete(MsgInvestBasicContract{}, "smartcontracts/invest_basic_contract", nil)
+	cdc.RegisterConcrete(MsgTransferBasicContract{}, "smartcontracts/transfer_basic_contract", nil)
 }
 
 // ModuleCdc defines the module codec

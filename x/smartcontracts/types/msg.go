@@ -117,3 +117,31 @@ func (msg MsgInvestBasicContract) ValidateBasic() error {
 	}
 	return nil
 }
+
+/////////////////////////////////
+func (msg MsgTransferBasicContract) Route() string { return RouterKey }
+
+func (msg MsgTransferBasicContract) Type() string {
+	return "transfer_basic_contract"
+}
+
+func (msg MsgTransferBasicContract) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{sdk.AccAddress(msg.From)}
+}
+
+// GetSignBytes gets the bytes for the message signer to sign on
+func (msg MsgTransferBasicContract) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic validity check for the AnteHandler
+func (msg MsgTransferBasicContract) ValidateBasic() error {
+	if msg.To.Empty() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "missing to address")
+	}
+	if msg.From.Empty() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "missing from address")
+	}
+	return nil
+}

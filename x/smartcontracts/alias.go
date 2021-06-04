@@ -34,9 +34,10 @@ type (
 	Params       = types.Params
 
 	//Custom MSG Types
-	MsgCreateBasicContract = types.MsgCreateBasicContract
-	MsgCreateYieldContract = types.MsgCreateYieldContract
-	MsgInvestBasicContract = types.MsgInvestBasicContract
+	MsgCreateBasicContract   = types.MsgCreateBasicContract
+	MsgCreateYieldContract   = types.MsgCreateYieldContract
+	MsgInvestBasicContract   = types.MsgInvestBasicContract
+	MsgTransferBasicContract = types.MsgTransferBasicContract
 
 	//Contract types
 	Contract            = types.Contract

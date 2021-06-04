@@ -23,7 +23,7 @@
         }
       },
       {
-        "contractor_address": "cosmos13p8s04502l7f5uxhwfdqmthd6yt4par0ekwvpe",
+        "contractor_address": "cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq",
         "coins": {
           "denom": "rel",
           "amount": "1000"
@@ -35,7 +35,7 @@
         }
       },
       {
-        "contractor_address": "cosmos1f6xhs3pljwurlexjq7cunvp4adxleylp06fdnr",
+        "contractor_address": "cosmos1a8n80ryg9vfgnhr89vc6actuek4hkvxgfkdcsc",
         "coins": {
           "denom": "rel",
           "amount": "1000"
@@ -54,12 +54,12 @@
         "other_addresses": []
       },
       {
-        "contractor_address": "cosmos13p8s04502l7f5uxhwfdqmthd6yt4par0ekwvpe",
+        "contractor_address": "cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq",
         "contractor_name": "haroon",
         "other_addresses": []
       },
       {
-        "contractor_address": "cosmos1f6xhs3pljwurlexjq7cunvp4adxleylp06fdnr",
+        "contractor_address": "cosmos1a8n80ryg9vfgnhr89vc6actuek4hkvxgfkdcsc",
         "contractor_name": "nadeem",
         "other_addresses": []
       }
@@ -73,7 +73,7 @@
         "positive_votes":"2",
         "negative_votes":"1",
         "positive_votes_address":[
-          "cosmos1f6xhs3pljwurlexjq7cunvp4adxleylp06fdnr",
+          "cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq",
           "cosmos1ss4h432u3ltnf624kaj9k4ackukhzazntm2ryr"
         ],
         "negative_votes_address":[
@@ -95,7 +95,7 @@
         "positive_votes":"1",
         "negative_votes":"1",
         "positive_votes_address":[
-          "cosmos1f6xhs3pljwurlexjq7cunvp4adxleylp06fdnr"          
+          "cosmos1a8n80ryg9vfgnhr89vc6actuek4hkvxgfkdcsc"          
         ],
         "negative_votes_address":[
           "cosmos13p8s04502l7f5uxhwfdqmthd6yt4par0ekwvpe"
@@ -114,9 +114,9 @@
       "contract_address": "cosmos18trlzjp04flp4u3yugxeqwymxw878wry66dvu7",
       "basic_contract": {
         "basic_detail": {
-          "title": "ISLAMABAD CENTER",
+          "title": "House in G11",
           "total_supply": "1000",
-          "sold_token": "0",
+          "sold_token": "20",
           "token_price": {
             "denom": "rel",
             "amount": "20"
@@ -124,7 +124,87 @@
           "start_date": "2021-05-08T09:53:37.1698532Z",
           "ending_date": "2021-05-10T09:53:37.1698532Z"
         },
-        "registry": null
+        "registry": [
+          {
+          "investor_address":"cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq",
+          "owned_token":"20",
+          "invested_date":"2021-06-08T09:53:37.1698532Z",
+          "token_transfer":null
+          }
+        ]
+      }
+    }
+    ,
+    {
+      "contract_address": "cosmos1rwlzqrtlr5pz05vr5a834828msuh0j5036205k",
+      "basic_contract": {
+        "basic_detail": {
+          "title": "Plaza in G11",
+          "total_supply": "1000",
+          "sold_token": "20",
+          "token_price": {
+            "denom": "rel",
+            "amount": "30"
+          },
+          "start_date": "2021-05-08T09:53:37.1698532Z",
+          "ending_date": "2021-05-10T09:53:37.1698532Z"
+        },
+        "registry": [
+          {
+          "investor_address":"cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq",
+          "owned_token":"20",
+          "invested_date":"2021-06-08T09:53:37.1698532Z",
+          "token_transfer":null
+          }
+        ]
+      }
+    },
+    {
+      "contract_address": "cosmos1dwlghvcltkhst90a7r6gnrsrl09upu99k8ga6n",
+      "basic_contract": {
+        "basic_detail": {
+          "title": "Mall in PWD",
+          "total_supply": "1000",
+          "sold_token": "30",
+          "token_price": {
+            "denom": "rel",
+            "amount": "10"
+          },
+          "start_date": "2021-05-08T09:53:37.1698532Z",
+          "ending_date": "2021-05-10T09:53:37.1698532Z"
+        },
+        "registry": [
+          {
+          "investor_address":"cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq",
+          "owned_token":"30",
+          "invested_date":"2021-06-08T09:53:37.1698532Z",
+          "token_transfer":null
+          }
+        ]
+      }
+    },
+    {
+      "contract_address": "cosmos1xuc4xkx5k0tfdchu7lugdrksnxrllpq02m3a9r",
+      "basic_contract": {
+        "basic_detail": {
+          "title": "Farm House",
+          "total_supply": "1000",
+          "sold_token": "40",
+          "token_price": {
+            "denom": "rel",
+            "amount": "30"
+          },
+          "start_date": "2021-05-08T09:53:37.1698532Z",
+          "ending_date": "2021-05-10T09:53:37.1698532Z"
+        },
+        "registry": [
+          {
+          "investor_address":"cosmos1athmuuk6q6gqczn4lys63v5zfe6vcecpx9uxvq",
+          "owned_token":"40",
+          "invested_date":"2021-06-08T09:53:37.1698532Z",
+          "token_transfer":null
+          }
+        ]
       }
     }
   ]
